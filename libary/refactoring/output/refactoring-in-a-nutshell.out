@@ -1,0 +1,12 @@
+\BOOKMARK [1][-]{section.1}{1 Naming and commenting}{}% 1
+\BOOKMARK [1][-]{section.2}{2 Code modularization}{}% 2
+\BOOKMARK [1][-]{section.3}{3 Indentation and bracketing}{}% 3
+\BOOKMARK [1][-]{section.4}{4 Static, instance and local}{}% 4
+\BOOKMARK [1][-]{section.5}{5 Instance variables}{}% 5
+\BOOKMARK [1][-]{section.6}{6 Setup in Eclipse}{}% 6
+\BOOKMARK [1][-]{section.7}{7 Other tips and tricks}{}% 7
+\BOOKMARK [2][-]{subsection.7.1}{7.1 boolean condition is a boolean value}{section.7}% 8
+\BOOKMARK [2][-]{subsection.7.2}{7.2 null value is null}{section.7}% 9
+\BOOKMARK [2][-]{subsection.7.3}{7.3 return stops the method}{section.7}% 10
+\BOOKMARK [2][-]{subsection.7.4}{7.4 Empty methods}{section.7}% 11
+\BOOKMARK [2][-]{subsection.7.5}{7.5 Auto-generated code and comments}{section.7}% 12

@@ -1,0 +1,51 @@
+
+
+body{
+background:#F1F1F1;
+font-family:'Bitter',serif;
+font-style:normal;
+/*font-family:'Times New Roman', Times, serif;*/
+font-size:11pt
+}
+
+h1{
+color:#003366
+}
+
+p a{
+color:#660000
+}
+
+article{
+margin-left:100pt;
+width:33em
+}
+
+code{
+background:#FFF;
+border-top:1px solid #CCC;
+border-bottom:1px solid #CCC;
+display:block;
+padding:2px;
+font-size:12pt;
+font-family:'Ubuntu Mono',monospace;
+}
+
+var{
+font-size:12pt;
+font-style:normal;
+font-family:'Ubuntu Mono',monospace;
+}
+
+.tooltip{
+width:33em;
+cursor:help;
+text-decoration:underline
+}
+
+.margin{
+display:inline-block;
+width:100pt;
+text-align:right;
+margin-left:-100pt
+}

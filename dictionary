@@ -1,0 +1,63 @@
+scope virkefelt
+namespace navnefelt
+private privat
+public offentlig
+protected beskyttet
+void tom
+null intetværdi
+byte oktet
+int heltal
+long langt heltal
+float brudent tal
+double brudent tal med dobbeltpræcision
+char tegn
+string tekst
+enum symbol
+class klasse
+struct struktur
+abstrct abstrakt
+array et-dimensionelt tabel
+assert hævd
+return afgiv/returnér
+throw hejs
+throws hejse
+exception undtagelse
+goto gå til
+super overklasse
+iteration gennemløb
+iterator gennemløber
+singleton monoinstansklasse mønster
+generics parametrisk polymorfiske klasser
+interface (GUI) grafisk brugergrænseflade
+interface (API) klassegrænseflade
+interface (java) klassegrænseflade implementationsspeficikaiton
+collections datasamlinger
+application program
+message-passing brevveksling
+unit-testing enhedsafprøvning
+try-catch-finally prøv-håndter-og til sidst
+UML objekt interkationsmodelering
+design-pattern design mønster
+strategy-pattern strategimønster
+factory-pattern fabriksmønster
+attributes attributer
+inheritance nedarvning
+boolean sandhedsværdi
+for-loop løkke
+for-each-loop for-hver-løkke
+while-loop imens-løkke
+encapsulation indkapsling
+reposibility ansvar
+observer observatør
+event begivenhed
+static statisk
+instance instans
+break stop løkken
+continue næste gennemløb
+new ny instans
+instanceof er en instans af (nedarver eller implementerer)
+polymorphism polymorfi
+if-then-else hvis-så-ellers
+reference reference
+implements implementerer
+switch-case-default tilfælds-gennemløb med standardaktion

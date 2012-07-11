@@ -1,0 +1,5 @@
+Make them static, such that if the constructor failed, null is returned. This
+can be better than throwing an exception.
+
+A member of a nested array can be replaced by an array of lesser size than the
+original inner arrays of the array.

@@ -1,0 +1,139 @@
+An alternative paradigm, the \key{imperative}, lets you be explicit about such
+matters. The paradigm emerged as the prime programming paradigm for computers
+with architectures stemming from John von Neumann's original proposal for the
+design of the digital computer\cite{von-neumann}. Today, the overwhelming
+majority of computers derive from this architecture; and no good introduction
+to the imperative paradigm can commence without at least a gentle introduction
+to the von Neumann architecture.
+
+A key aspect of the von Neumann architecture is that it keeps the computer
+rather feebleminded, leaving it to the programmer to be the clever one. As we
+shall discover, we've managed to come up with clever methods of abstraction
+that guard us against certain pitfalls, but programming is still an immensely
+challenging endeavour; in part, due to the persistent fundamental difficulty of
+solving certain kinds of problems automatically.
+
+\begin{definition}
+
+A \key{computer}\footnotemark is an entity with \key{state} and
+\key{processors}. A processor performs \key{actions} that modify the state of
+the computer.
+
+\footnotetext{Although at the beginning of the 20th century, a ``computer'' was
+still a profession, today most computers are electronic machines.  We'll use
+the words ``computer'' and ``machine'' interchangably.}
+
+\end{definition}
+
+While it may be modern (about time) to speak of computers as machines with
+multiple processors, we will restrain ourselves to single processor machines.
+Programming for multiple processors raises a range of problematics irrelevant
+to the core matter of these lecture notes. At times, it will provide for an
+interesting discussion to consider how certain aspects map over to
+multiprocessor machines, but in such cases they will be mentioned explicitly.
+
+\begin{definition}
+
+``An action is a happening, taking place in a finite period of time and
+establishing a well-defined, intended \key{net effect}.''
+\cite{dijkstra-introduction}
+
+\end{definition}
+
+This definition highlights two important points. Firstly, an action takes place
+in a finite period of time, say $T_1$. This allows us to speak of the points in
+time $T_n$ and $T_{n+1}$, as the times of action inception and termination,
+i.e. $T_{n+1}=T_n+T_1$. Secondly, an action establishes a well-defined,
+intended net effect. This highlights that we are interested in actions that do
+something, indeed something expected.
+
+To this end, it makes sense to describe the ``net effect'' of an action as the
+difference between the state of the computer at time $T_n$ and $T_{n+1}$.
+However, this notion breaks down as we turn to multiprocessor machines, where
+the clear benefit of performing multiple actions at once has been utilized.
+Apply this notion with care.
+
+% ``action – a function or a function object that mutates the value of an
+% object'' -- Alexander Stepanov, Adobe notes.
+
+As an example of an action, consider doing the laundry. Given a pile of dirty
+laundry, the net effect of this action is the same pile of laundry; but clean.
+Let us refer to this action as \function{Do-The-Laundry}.
+
+Clearly, the functional paradigm fits abnormally to this type of problem.
+Knitting a pile of laundry --- clean, but otherwise equivalent --- is not
+nearly as practical as cleaning the dirty pile. Why should we dispose of a pile
+of perfectly good laundry, just because it has gotten a little dirty? The
+process of cleaning --- rather than knitting --- is more explicit in the
+imperative paradigm.
+
+\function{Do-The-Laundry} has a rather abstract definition at the moment. We've
+defined it's net effect, but not how to achieve it. In some contexts, such as
+planning chores around the house, this definition may be sufficient. In others,
+such as actually doing the laundry, it is insufficient.
+
+As a matter of fact, even in the context of planning chores around the house,
+the current definition is insufficient. We have important programs to write ---
+chores around the house should not take up an indefinite amount of time. We
+have a budget to keep --- doing the laundry should not cost an indefinite
+amount of money. These, and other important attributes of the action cannot be
+defined without defining how we do the laundry first, indeed because there are
+different ways to do the laundry, each with different costs implied.
+
+A processor is a discrete physical entity. As such, it only has a finite set of
+actions that it can perform. While possible, it is clearly impractical to
+extend the physical processor whenever we needed to do a new kind of action.
+This realization is what leads to another, and probably most important marvel
+of the von Neumann architecture, a \key{stored-program computer}.
+
+Instead, we seek to build \key{general-purpose} processors, and sequence basic
+actions to achieve more complex overall net effects. Given a complex action, we
+gradually decompose it into sequences of subactions that overall achieve the
+desired net effect. Let us attempt to do this for the \function{Do-The-Laundry}
+action:
+
+\begin{codebox}
+\Procname{\function{Do-The-Laundry}(a pile of dirty laundry)}
+\li split the pile into colors and whites\label{code:do-the-laundry:1}
+\li wash colors
+\li wash whites
+\li make a neat stack of the clean laundry
+\li \Return the neat stack
+\end{codebox}
+
+This is an example of a \key{routine}, \key{procedure}, \key{method},
+\key{process}, \key{function}, \ldots
+
+\begin{flushright}
+
+``What's in a name? that which we call a rose\\
+By any other name would smell as sweet;''\\
+--- William Shakespeare, Romeo and Juliet.
+
+\end{flushright}
+
+Indeed, a named sequence of actions, that establishes some overall net effect
+has many names. We'll adopt the term ``routine'', since all of us have a
+routine for doing the laundry and doing the laundry is a rather routine task!
+
+The subactions specified above aren't particularly ``basic''. Indeed, we've
+specified the complex \function{Do-The-Laundry} in terms of a series of other
+complex actions. These subactions are not well-defined, in the sense that we've
+simply used natural language to describe them. Let us consider the sequence of
+subactions that would constitute the action on line
+\ref{code:do-the-laundry:1}:
+
+\begin{codebox}
+\Procname{\function{Split-Whites-And-Colors}(a pile of laundry)}
+\li let $whites$ be an empty pile
+\li let $colors$ be an empty pile
+\li \For each piece of laundry \Do
+\li \If peace is white \Then
+\li put piece in $whites$
+\li \Else
+\li put piece in $colors$
+\End
+\End
+\li \Return $whites$ and $colors$
+\end{codebox}
+

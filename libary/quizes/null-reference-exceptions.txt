@@ -1,0 +1,69 @@
+Given the class definitions
+
+public class Person
+{
+  private String name;
+
+  public Person(String name)
+  {
+    this.name = name;
+  }
+
+  public String getName()
+  {
+    return this.name;
+  }
+}
+
+
+public class Message
+{
+  private Person author;
+  private String text;
+
+  public Message(Person author, String text)
+  {
+    this.author = author;
+    this.message = message;
+  }
+
+  public Person getAuthor()
+  {
+    return this.author;
+  }
+
+  public String getText()
+  {
+    return this.text;
+  }
+}
+
+
+and the following code snippet..
+
+public boolean areMessagesEqual(Message first, Message second)
+{
+  boolean equalTexts = first.getText().equals(second.getText());
+  boolean equalAuthors = first.getAuthor().getName().equals(second.getAuthor().getName());
+  return equalTexts && equalAuthors;
+}
+
+No assumptions are made, so note the lack of comments. How many null reference
+exceptions can there occur in areMessagesEqual?
+
+
+
+
+
+
+
+
+
+
+Answer: 8
+
+boolean equalTexts = first.getText().equals(second.getText());
+                          ^         ^             ^
+boolean equalAuthors = first.getAuthor().getName().equals(second.getAuthor().getName());
+                            ^           ^         ^             ^           ^
+

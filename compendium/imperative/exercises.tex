@@ -1,0 +1,63 @@
+\section*{Exercises}
+
+\renewcommand{\theenumi}{\bf\arabic{enumi}}
+
+\begin{enumerate}
+
+\item \exercise{cfsahof} In \referToSection{structures} we discussed how
+control flow structures are akin to built-in higher-order functions. Implement
+the following control flow structures as polymorphic higher-order functions in
+\fun:
+
+\begin{enumerate}
+
+\item A counter loop.
+
+\item A conditional loop.
+
+\item An iterator loop.
+
+\item If-then-else branch.
+
+\item If-then-elseif*-else branch.
+
+\end{enumerate}
+
+\item Implement a HelloWorld program in Go.
+
+\item Write a program that prints itself in Go.
+
+\item Consider the following action cluster:
+
+\begin{codebox}
+\Procname{$\proc{XOR}(x:\kw{boolean},y:\kw{boolean})$}
+\zi \kw{returns}\ $\left\{
+\begin{array}{ll}
+\kw{false} & \kw{if}\ (x\ \wedge\ y)\ \vee\ (\neg x\ \wedge\ \neg y)\\
+\kw{true} & \kw{otherwise}
+\end{array}
+\right.$
+\end{codebox}
+
+\begin{enumerate}
+
+\item Can a sequence of applications of the $\proc{XOR}$ function be used to
+swap two boolean values?
+
+\item Go has a built-in binary infix operator \verb ^ , which corresponds to
+running the $\proc{XOR}$ function on the respective bits of the two arguments.
+Can you come up with a sequence of Go code that swaps two integers?
+
+\item Can a similar sequence be used to swap two floating point values without
+loss of precision?
+
+\end{enumerate}
+
+\item Consider $\proc{Naur-Maximum}\p{A,n}$, discussed in
+\referToSection{imperative:algorithms:naur-maximum}. Devise a stable algorithm,
+which for a non-empty array $A$, returns a minimum element in $A$.
+
+% -10 does not return a minimum element.
+% -5 does not return the stable minimum element.
+
+\end{enumerate}

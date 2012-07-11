@@ -1,0 +1,139 @@
+\chapter{Imperative programming}
+
+Consider doing the laundry. If we have a common, house-hold washing machine at
+our disposal --- the \emph{routine}, may look something like this:
+
+\begin{enumerate}
+
+\item split the laundry into whites and colours;
+
+\item wash whites;
+
+\item wash colours;
+
+\item dry the laundry;
+
+\item neatly pile up the laundry.
+
+\end{enumerate}
+
+In a conventional functional programming language, such as SML, this may end up
+looking like this:
+
+\begin{code}
+(pile (dry (wash (split laundry))))
+\end{code}
+
+While comprehensible, this does not read very well. Most languages we're used
+to, i.e. \wikipedia{Indo-european}{Indo-European} languages, read
+left-to-right, top-to-bottom. Here, the flow of the program is expressed
+right-to-left, and there is no notion of top-down descent at all. If anything,
+there's a notion of bottom-up ascent, if we for instance, lay out the program
+like this:
+
+\begin{code}
+(pile
+  (dry
+    (wash
+      (split laundry))))
+\end{code}
+
+This reads like we're putting the cart before the horse. Indeed, some tasks ---
+such as, doing the laundry, cooking a meal, writing a program, etc. --- are
+inherently sequential. Functional programming languages can be
+\explanation{syntactically}{A programming language has syntactic rules defining
+the valid positioning of symbols. In this case, the syntactic rule is that the
+name precedes the arguments in a function call.} unfit for writing such
+programs well.
+
+We will develop the notion of a \emph{well-written program} throughout these
+lecture notes, but we begin with the following definition:
+
+\begin{definition}
+
+A well-written program is a well-read program.
+
+\end{definition}
+
+That is, a well-written program is comprehensible to another programmer.
+Naturally, not any old programmer will do, but someone with relative knowledge
+of the problem domain, and programming experience comparable, or superceeding
+yours, should be able to comprehend and evaluate your programs. The intent is
+to facilitate a peer-reviewed evolution of programs in general.
+
+We were also somewhat \emph{declarative} when we wrote the functional program.
+For instance, we've left out the fact that we should wash whites before we wash
+colours. Actually, we didn't even mention that we split the laundry into whites
+and colours, merely that we spit it, somehow\ldots\ We've left it up to the
+\var{wash} and \var{split} functions to mention these details.
+
+\begin{definition}
+
+A declarative style of programming is a style where we tell the reader ``what''
+we're doing, rather than ``how'' we're doing it.
+
+\end{definition}
+
+{\bf Assignment}
+
+ASCII report.
+
+The DIKU canteen is the only completely student-driven canteen on the
+Copenhagen University campus. The canteen was established in 1971, and runs
+till this day. As a student-driven canteen, even the accounting is done by
+students. No biggie for Datalogy students, eh? We'll see.
+
+It is possible to buy from the canteen in bulk. The usual order consists of
+perhaps 30 bottles of soft drinks, and 30 bottles of beer. Although all soft
+drinks have the same price, beer prices may vary depending on how enthusiastic
+you are about beer. Indeed, DIKU alumni and research groups can be quite a
+picky bunch when it comes to beer specialities. We can without loss of
+generality constrain ourselves to beer.
+
+Every time a bulk purchase is made, the items and quantities purchased are
+noted in a journal, leaving it to accounting to handle later.
+
+This is where you come in. We need to write a program that can process the
+journal and produce a summary report in ASCII. The summary report should
+process the entire journal and provide as output:
+
+\begin{itemize}
+
+\item the total number of times each type of beer was purchased;
+
+\item the total revenue made from each type of beer;
+
+\item the overall revenue from bulk purchases;
+
+\item an overview of the development of the revenue over time.
+
+\end{itemize}
+
+\begin{verbatim}
+Guld Tuborg 10
+Grøn Tuborg 8
+Leffe Brun 15
+Leffe Blond 15
+\end{verbatim}
+
+The users will
+sometimes however chose to buy abnormal quantities of various drinks.
+
+- Canteen accounting. List of items with their prices, followed by event
+  receipts.
+
+- ASCII bar chart.
+
+- Challenge of the week: ASCII line chart. Hint: don't drink and derive!
+
+Tracing the attacker's IP.
+
+- GUI in visual basic, LOL.
+
+- Parse (csv-based) log files.
+
+- Find comon behaviour:
+
+- - Periodic access to the same resource.
+
+- - Frequent access to different resources.

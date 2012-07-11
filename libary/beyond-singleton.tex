@@ -1,0 +1,20 @@
+\section{Types of singletons}
+
+The singleton is among the simplest object-oriented design patterns, often
+taught in basic object-oriented programming courses. However, what is rarely
+taught is the number of different types of singletons that can be employed. The
+choice of the type of singleton for your use case depends on how the singleton
+is used, but all these methods share one thing -- the class is only ever
+initialized once. The question is when exactly is the class initialized, and
+when it makes sense for it to be initialized.
+
+As a matter of fact, most books choose one of the types discussed in this
+writing, and discuss that type in detail.
+
+When the object is initialized
+
+When the object is mentioned for the first time -- blind initialization, it doesn't matter who or when initializes it.
+
+Whenever the object is accessed -- any access can initialize the object -- doesn't always make sense.
+
+At a certain specific point in the application, e.g. a web-server initializes a request, and that request should be a singleton throughout the request lifetime.

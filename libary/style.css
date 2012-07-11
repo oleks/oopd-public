@@ -1,0 +1,15 @@
+body,html{margin:0;padding:0;background:#fff;font-family:"Gentium Book Basic" serif}
+.class,.content{width:800px;margin:0 auto}
+.title{font-weight:bold;font-size:30px;margin:10px 0 20px 0}
+.methods{margin:20px 0 0 0}
+.method{margin:0 0 20px 0}
+.access,.static,.type,.method div.name{display:inline-block;margin:0 5px 0 0}
+.access,.static,.type,.method div.name,.package a{font-family:'Ubuntu Mono' sans-serif}
+.access,.static,.type.prime{font-weight:bold;color:#4F6CC2}
+.arguments{margin:5px 0 5px 20px;padding:3px;background:#CFEBFA}
+.drydocs{margin:10px 0 0 20px}
+.drydoc{margin:10px 0 0 0}
+.drydoc div.header{font-weight:bold}
+.label{font-weight:bold;display:inline-block;margin-right:5px}
+.classes,.packages{margin:20px 0 0 0}
+.classes a, .packages a{margin:5px 0 0 10px}

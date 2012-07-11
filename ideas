@@ -1,0 +1,243 @@
+Scientific method:
+  Compare to previous years wrt. completion and drop out rates.
+
+
+Text:
+
+Introduce the von Neumann machine (one of the main differences between
+functional and procedural programming).
+
+Introduce stacks, show an interface (in this case an object fulfills the
+interface if it implements the certain list of methods), show an
+implementation, talk about time and space complexity.
+
+Introduce queues (and deques), show an interface, discuss implementation
+techniques, leave actual implementation up to the reader, where submission is
+graded automatically to include: valid interface implementation (as in
+unit-test tested), perhaps well-named, containing annotation of time and space
+complexity. Half grade (or so) is passing the automatic check, half grade is
+given by instructor, checking the validity of the time and space complexity
+estimates, coding and commenting style in general.
+
+Stack reference vs. array implementations. Arry implementations can be
+introduced after the dynamic array has been introduced.
+
+Complexity of dynamic arrays easy enough for them? After DIMS, that should be
+the case.
+
+Same-type/different-type? Start out with same type -- argument for it saying
+that while in principle, different objects can be stored in the same stack (and
+the space complexity therefore initially unknown), but that isn't particularly
+practical as you would more often than not take elements off of a stack in an
+itterative fashion, and if you have different types of objects it will be hell
+for you to figure out what to do with each object. The story is different if
+you want to do something that is conceptually the same for different kinds of
+objects. We refer to this as objects exhibiting the same sort of abstract
+behaviour, but in actuallity the behaviour is the same. We will return to this
+a bit later, we start by saying that all the elements in a stack have the same
+type.
+
+nice idea for recurring assignment theme: operating systems
+  week 1: login, whoami, passwd
+    with just one user, user is "created" on login
+    emphasis on program state
+    perhaps more emphasis on devision into structures
+    state machine?
+
+it's hard to make emphasis on object state without object sets.. in that
+context, it's always just as easy to declare all elements with individual
+variables and a naming convention. yeah, so this idea for week 1 is no good
+(keeping a conversation with the user is a good idea though).
+
+Week 1
+  main
+  code lines
+  functions (and recursion)
+  comments
+  if-then-else-case
+  primitive types and basic structures
+  standard in/out/erroir (string formatting?)
+  assignment: simple program that talks to the user
+Week 2
+  for-while loops (and arrays)
+  recursive structures (includes asymptotics and simple API design)
+    stacks
+    queues
+    deques
+  asymptotics with recursion
+  interfaces
+  -- rewriting stack operations for each type
+  assignment: stack-based calculator
+Week 3
+  shift to java
+    simple transition
+    actual advantages -- inheritance, constructors, generics
+
+
+Lectures
+
+  - wrt. floating point numbers -- create a plot that shows which numbers are
+    representable exactly by float and double, to give an overview of the
+    "precision", i.e. show which numbers are representable exactly.
+
+
+IDE
+
+  - Intellisense and autocompilation with Word-like underlining of errors is
+    GOOD -- error messages are cryptic..
+  - Project (and code) management should be out of the picture in general.
+
+Exercises
+- go scripts with main.
+- go packages with specific capital letter functions.
+- java files with main.
+- java classes with specific names or implementing a specific interface.
+- java packages with specific classes having specific names or implementing specific interfaces.
+
+- test case
+  - std/argument type input/output generators
+    - argument types are basically the built-in go and java unit test frameworks.
+    - std could be generated using good old executables.
+  - failure penalty
+
+Imperative programming concepts - 2 weeks
+  Main
+  Types
+    Primitive
+    Aggregate
+    Structured
+      Recursive data structures
+    References
+      void* and casting
+  Branching and looping
+    Counter looping
+    Conditional looping
+  Functions
+    Call by value
+    Call by reference (and sharing)
+  Modules
+    Limited extraction
+    Documentation
+:: Note: no strings
+Object-oriented programming concepts - 2 weeks
+  Objects are first and foremost structures
+  Private object space and public interface
+  Polymorphism
+    Subtyping
+    Parametric polymorphism
+      with subtyping and limited quantification
+  Reflection?
+  Design patterns
+    Decorator
+    Singleton
+    Factory
+    Iterator
+      Iterator looping
+    Observer
+    Strategy
+  API design
+    Interface documentation
+      null
+      running time and memory estimates
+    Programming by contract
+      Invariants
+    Exceptions & handling
+Basic data structures - 1 week
+  Lists
+    Stacks
+    Queues
+    Deques
+  Heaps
+  BST
+  Hash tables
+Working with users and peripherals - 1 week
+  IO
+  Graphical user interface
+
+
+Exercises:
+  Big O approximations
+  Basic data structure construction
+    Heaps, stacks, etc.
+    Points, shapes, real-world stuff, etc.
+    In both pure imperative and OO way
+  Basic algorithms
+
+
+
+Goals:
+  Væk fra java.
+  Et kursus i imperativ programmering.
+  Fokus på korrekthed, kompleksistet og konstruktion, både teoretisk og praktisk.
+  Værktøjer til instruktorer og studerende til opgaverettelse og opgavestilling.
+
+Imperative programming concepts - 2 weeks
+  Main
+  Types
+    Primitive
+    Aggregate
+    Structured
+      Recursive data structures
+    References
+      void* and casting
+  Branching and looping
+    Counter looping
+    Conditional looping
+  Functions
+    Call by value
+    Call by reference (and sharing)
+  Modules
+    Limited extraction
+    Documentation
+:: Note: no strings
+Object-oriented programming concepts - 2 weeks
+  Objects are first and foremost structures
+  Private object space and public interface
+  Polymorphism
+    Subtyping
+    Parametric polymorphism
+      with subtyping and limited quantification
+  Reflection?
+  Design patterns
+    Decorator
+    Singleton
+    Factory
+    Iterator
+      Iterator looping
+    Observer
+    Strategy
+  API design
+    Interface documentation
+      null
+      running time and memory estimates
+    Programming by contract
+      Invariants
+    Exceptions & handling
+Basic data structures - 1 week
+  Lists
+    Stacks
+    Queues
+    Deques
+  Heaps
+  BST
+  Hash tables
+Working with users and peripherals - 1 week
+  IO
+  Graphical user interface
+
+
+Exercises:
+  Big O approximations
+  Basic data structure construction
+    Heaps, stacks, etc.
+    Points, shapes, real-world stuff, etc.
+    In both pure imperative and OO way
+  Basic algorithms
+
+
+Goals:
+  Away from java (initially).
+  More focus on simple imperative programming (initially).
+  Focus on correctness, complexity and program composition.
+  Create tools for students and instructors such as an online assignment
+  system, akin to https://www.interviewstreet.com/challenges/.
