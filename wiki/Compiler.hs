@@ -97,7 +97,13 @@ compile latex =
       "<meta charset='utf-8'>",
       "</head>",
       "<body><article>"]
-    footer = "</article></body></html>"
+    footer = List.foldr (\text i -> showString text i) "" $
+      ["</article><footer>",
+      "<address>",
+      "<h2>Datalogisk institut</h2>",
+      "<h1>University of Copenhagen</h1>",
+      "</address>",
+      "</footer></body></html>"]
   in
     showString header $
     showString (List.foldl' (\text i -> showString i text) "" (output context)) $
