@@ -59,13 +59,13 @@ That is, a well-written program is comprehensible to another programmer.
 Naturally, not any old programmer will do, but someone with relative knowledge
 of the problem domain, and programming experience comparable, or superceeding
 yours, should be able to comprehend and evaluate your programs. The intent is
-to facilitate a peer-reviewed evolution of programs in general.
+to facilitate a the review and evolution of your programs by your peers.
 
 We were also somewhat \emph{declarative} when we wrote the functional program.
 For instance, we've left out the fact that we should wash whites before we wash
 colours. Actually, we didn't even mention that we split the laundry into whites
-and colours, merely that we spit it, somehow\ldots\ We've left it up to the
-\var{wash} and \var{split} functions to mention these details.
+and colours; we've left it up to the \var{wash} and \var{split} function
+definitions to discuss such ``details''.
 
 \begin{definition}
 
@@ -73,6 +73,20 @@ A declarative style of programming is a style where we tell the reader ``what''
 we're doing, rather than ``how'' we're doing it.
 
 \end{definition}
+
+An alternative functional program for the task could be:
+
+\begin{code}
+let
+  (dirtyWhites, dirtyColours) = split dirtyLaundry
+  cleanWetWhites = wash dirtyWhites
+  cleanWetColours = wash dirtyColours
+  cleanLaundry = dry (cleanWetWhites ++ cleanWetColours)
+in
+  pile cleanLaundry
+\end{code}
+
+In regular functional programming, the \code{let}-syntax.
 
 {\bf Assignment}
 

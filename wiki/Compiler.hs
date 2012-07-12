@@ -306,6 +306,14 @@ compileTeXemes (
     addToParagraph "</var>"
     compileTeXemes tail
 compileTeXemes (
+  (TeXCommand "code") :
+  (TeXGroup paragraphs) :
+  tail) = do
+    addToParagraph "<code>"
+    compileTeXGroup paragraphs
+    addToParagraph "</code>"
+    compileTeXemes tail
+compileTeXemes (
   (TeXCommand "wikipedia") :
   (TeXGroup page) :
   (TeXGroup text) :
