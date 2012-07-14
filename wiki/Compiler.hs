@@ -275,6 +275,10 @@ compileTeXemes (
     openItem
     compileTeXemes tail
 compileTeXemes (
+  [TeXCommand "ldots"]) = do
+    addToParagraph "&hellip;"
+    closeParagraph
+compileTeXemes (
   (TeXCommand "ldots") :
   tail) = do
     addToParagraph "&hellip;"
