@@ -86,6 +86,13 @@ in
   stack cleanLaundry
 \end{code}
 
+\begin{definition}
+
+We refer to lines 1--7 as the let-block, lines 2--4 as the let-definitions, and
+line 7 as the let-expression.
+
+\end{definition}
+
 In functional programming, the \code{let}-syntax is used to reduce the
 complexity of an expression by letting you give its subexpression intuitive
 names. This allows the reader to read the expression, and delve into the
@@ -125,73 +132,17 @@ in
     cleanWetWhites, cleanWetColours, cleanLaundry}
 \end{code}
 
-It seems overly excessive to have the state at the final expression contain
-\emph{all} the ``intermediate'' names, such as \var{dirtyWhites},
-\var{cleanWetColours}, etc. Indeed, all it really needs is the
-\var{cleanLaundry}. This can be mitigated for using, say, a nested
-\code{let}-block:
+It seems overly excessive to have the state at the \code{let}-expression
+contain all these ``intermediate'' names, such as \var{dirtyWhites},
+\var{cleanWetColours}, etc. All we really need in the \code{let}-expression is
+the clean laundry.  What's more, it does not conceptually make sense to be able
+to use the dirty, or wet laundry once the laundry has been washed and
+dried\ldots 
 
-\begin{code}
-let
-  cleanLaundry =
-    let
-      (dirtyWhites, dirtyColours) = split dirtyLaundry
-      cleanWetWhites = wash dirtyWhites
-      cleanWetColours = wash dirtyColours
-    in
-      dry (cleanWetWhites, cleanWetColours)
-in
-  stack cleanLaundry
-\end{code}
-
-Which leads to the following evolution of the state:
-
-\begin{code}
-let
-  let
-    {dirtyLaundry}
-    {dirtyLaundry, dirtyWhites, dirtyColours}
-    {dirtyLaundry, dirtyWhites, dirtyColours,
-      cleanWetWhites}
-  in
-    {dirtyWhites, dirtyColours, cleanWetWhites,
-      cleanWetColours}
-in
-  {dirtyLaundry, cleanLaundry}
-\end{code}
-
-We may apply the same logic to the other intermediaries, such as washing
-colours, and end up with perhaps a completely intollerable indentation level,
-and something strikingly similar to our original program, except much more
-verbose.
-
-Alternatively, we may use \explain{auxiliary}{Functions whos sole purpose is to
-make other functions easier to comprehend.} functions. For instance:
-
-\begin{code}
-washAndDry dirtyLandry =
-  let
-    (dirtyWhites, dirtyColours) = split dirtyLaundry
-    cleanWetWhites = wash dirtyWhites
-    cleanWetColours = wash dirtyColours
-  in
-    dry (cleanWetWhites, cleanWetColours)
-
-doTheLaundry dirtyLaundry =
-  let
-    cleanLaundry = washAndDry dirtyLaundry
-  in
-    stack cleanLaundry
-\end{code}
-
-However, if we again consider applying this logic to other intermediaries, we
-may end up with a dozen helper functions, which isn't too readable either.
-
-Another question worth considering wrt. the final \code{let}-expression having
-names like \var{dirtyLaundry} and \var{cleanWetWhites} at its disposal, is
-whether it makes sense for us to be able to use them in the expression. If
-we've really washed and dried all the laundry, hopefully there is no more dirty
-or wet laundry, otherwise all our programming so far has been in vain.
+While we could attempt mitigate for this using nested \code{let}-blocks or
+\explain{auxiliary functions}{Functions whos sole purpose is to make other
+functions easier to comprehend.}, the final code will not be as easy as
+1-2-3-4-5, i.e. our initial specification of the procedure.
 
 
 
