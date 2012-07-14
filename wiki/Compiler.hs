@@ -333,7 +333,7 @@ compileTeXemes (
     addToParagraph "</a>"
     compileTeXemes tail
 compileTeXemes (
-  (TeXCommand "explanation") :
+  (TeXCommand "explain") :
   (TeXGroup text) :
   (TeXGroup explanation) :
   tail) = do
