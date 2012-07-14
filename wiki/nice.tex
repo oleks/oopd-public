@@ -1,7 +1,7 @@
 \chapter{Imperative programming}
 
 Consider doing the laundry. If we have a common, house-hold washing machine at
-our disposal --- the \emph{routine}, may look something like this:
+our disposal --- the \emph{procedure}, may look something like this:
 
 \begin{enumerate}
 
@@ -13,7 +13,7 @@ our disposal --- the \emph{routine}, may look something like this:
 
 \item dry the laundry;
 
-\item neatly pile up the laundry.
+\item neatly stack up the laundry.
 
 \end{enumerate}
 
@@ -21,7 +21,7 @@ In a conventional functional programming language, such as SML, this may end up
 looking like this:
 
 \begin{code}
-(pile (dry (wash (split laundry))))
+(stack (dry (wash (split laundry))))
 \end{code}
 
 While comprehensible, this does not read very well. Most languages we're used
@@ -32,7 +32,7 @@ there's a notion of bottom-up ascent, if we for instance, lay out the program
 like this:
 
 \begin{code}
-(pile
+(stack
   (dry
     (wash
       (split laundry))))
@@ -41,10 +41,10 @@ like this:
 This reads like we're putting the cart before the horse. Indeed, some tasks ---
 such as, doing the laundry, cooking a meal, writing a program, etc. --- are
 inherently sequential. Functional programming languages can be
-\explanation{syntactically}{A programming language has syntactic rules defining
-the valid positioning of symbols. In this case, the syntactic rule is that the
-name precedes the arguments in a function call.} unfit for writing such
-programs well.
+\explain{syntactically}{A programming language has syntactic rules defining the
+valid positioning of symbols. In this case, the syntactic rule is that the name
+precedes the arguments in a function call.} unfit for writing such programs
+well.
 
 We will develop the notion of a \emph{well-written program} throughout these
 lecture notes, but we begin with the following definition:
@@ -74,19 +74,127 @@ we're doing, rather than ``how'' we're doing it.
 
 \end{definition}
 
-An alternative functional program for the task could be:
+An alternative functional program for this procedure could be:
 
 \begin{code}
 let
   (dirtyWhites, dirtyColours) = split dirtyLaundry
   cleanWetWhites = wash dirtyWhites
   cleanWetColours = wash dirtyColours
-  cleanLaundry = dry (cleanWetWhites ++ cleanWetColours)
+  cleanLaundry = dry (cleanWetWhites, cleanWetColours)
 in
-  pile cleanLaundry
+  stack cleanLaundry
 \end{code}
 
-In regular functional programming, the \code{let}-syntax.
+In functional programming, the \code{let}-syntax is used to reduce the
+complexity of an expression by letting you give its subexpression intuitive
+names. This allows the reader to read the expression, and delve into the
+details of its constituents only if the reader wishes to do so. As long as
+important deails are retained, this is a useful technique for making your
+programs more readable.
+
+In this particular case, the expression reduces to \code{stack
+cleanLaundry}. This seems overly declarative. We're completely disregarding the
+important aspects of ``doing the laundry''. We're so eager not to tell the
+reader ``how'' we're doing it, that we forget to tell the reader ``what'' we're
+doing.
+
+The \code{let}-syntax does however provide for a nice segway into another
+\explain{programming paradigm}{A way of writing a particular class of programms
+well.}, more suitable for writing out \emph{procedures}. In particular, the
+\code{let}-syntax provides more than a simple mechanism for naming
+subexpressions. Note, how we could use the name \var{dirtyWhites} when we
+defined \var{cleanWetWhites}, or how we could use \var{cleanWetWhites} when we
+defined \var{cleanLaundry}.
+
+It is as if some sort of ``state'' is retained from one defintion to the next,
+such that names defined further up can be used in definitions further down. If
+we represent ``state'' as the set of names available for use in an expression
+we can specify how the state develops throughout the \code{let}-block: 
+
+\begin{code}
+let
+  {dirtyLaundry}
+  {dirtyLaundry, dirtyWhites, dirtyColours}
+  {dirtyLaundry, dirtyWhites, dirtyColours,
+    cleanWetWhites}
+  {dirtyLaundry, dirtyWhites, dirtyColours,
+    cleanWetWhites, cleanWetColours}
+in
+  {dirtyLaundry, dirtyWhites, dirtyColours,
+    cleanWetWhites, cleanWetColours, cleanLaundry}
+\end{code}
+
+It seems overly excessive to have the state at the final expression contain
+\emph{all} the ``intermediate'' names, such as \var{dirtyWhites},
+\var{cleanWetColours}, etc. Indeed, all it really needs is the
+\var{cleanLaundry}. This can be mitigated for using, say, a nested
+\code{let}-block:
+
+\begin{code}
+let
+  cleanLaundry =
+    let
+      (dirtyWhites, dirtyColours) = split dirtyLaundry
+      cleanWetWhites = wash dirtyWhites
+      cleanWetColours = wash dirtyColours
+    in
+      dry (cleanWetWhites, cleanWetColours)
+in
+  stack cleanLaundry
+\end{code}
+
+Which leads to the following evolution of the state:
+
+\begin{code}
+let
+  let
+    {dirtyLaundry}
+    {dirtyLaundry, dirtyWhites, dirtyColours}
+    {dirtyLaundry, dirtyWhites, dirtyColours,
+      cleanWetWhites}
+  in
+    {dirtyWhites, dirtyColours, cleanWetWhites,
+      cleanWetColours}
+in
+  {dirtyLaundry, cleanLaundry}
+\end{code}
+
+We may apply the same logic to the other intermediaries, such as washing
+colours, and end up with perhaps a completely intollerable indentation level,
+and something strikingly similar to our original program, except much more
+verbose.
+
+Alternatively, we may use \explain{auxiliary}{Functions whos sole purpose is to
+make other functions easier to comprehend.} functions. For instance:
+
+\begin{code}
+washAndDry dirtyLandry =
+  let
+    (dirtyWhites, dirtyColours) = split dirtyLaundry
+    cleanWetWhites = wash dirtyWhites
+    cleanWetColours = wash dirtyColours
+  in
+    dry (cleanWetWhites, cleanWetColours)
+
+doTheLaundry dirtyLaundry =
+  let
+    cleanLaundry = washAndDry dirtyLaundry
+  in
+    stack cleanLaundry
+\end{code}
+
+However, if we again consider applying this logic to other intermediaries, we
+may end up with a dozen helper functions, which isn't too readable either.
+
+Another question worth considering wrt. the final \code{let}-expression having
+names like \var{dirtyLaundry} and \var{cleanWetWhites} at its disposal, is
+whether it makes sense for us to be able to use them in the expression. If
+we've really washed and dried all the laundry, hopefully there is no more dirty
+or wet laundry, otherwise all our programming so far has been in vain.
+
+
+
 
 {\bf Assignment}
 
