@@ -6,6 +6,7 @@ import qualified Data.Foldable as Foldable
 import Text.Show
 
 import Grammar
+import CodeCompiler
 
 data State = OrderedList | OrderedItem
 
@@ -230,7 +231,7 @@ compileTeXemes ((TeXRaw text):tail) = do
   compileTeXemes tail
 compileTeXemes ((TeXVerbatim text):tail) = do
   closeParagraph
-  addManyToOutput ["<pre><code>", text, "</code></pre>"]
+  addManyToOutput ["<pre>", text, "</pre>"]
   compileTeXemes tail
 compileTeXemes ((TeXBegin name):tail) = do
   closeParagraph
@@ -324,6 +325,14 @@ compileTeXemes (
     addToParagraph "</code>"
     compileTeXemes tail
 compileTeXemes (
+  (TeXCode code) :
+  tail) = do
+    closeParagraph
+    addToOutput "<code><ol>"
+    liftOutput (compileCode code)
+    addToOutput "</code></ol>"
+    compileTeXemes tail
+compileTeXemes (
   (TeXCommand "wikipedia") :
   (TeXGroup page) :
   (TeXGroup text) :
@@ -408,6 +417,13 @@ addManyToOutput strings = do
   context <- getContext
   setContext context {
     output = List.foldl' (\acc i -> i : acc) (output context) strings
+  }
+
+liftOutput :: ([String] -> [String]) -> TeX ()
+liftOutput function = do
+  context <- getContext
+  setContext $ context {
+    output = function (output context)
   }
 
 getParagraphLength :: TeX Int

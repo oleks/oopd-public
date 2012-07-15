@@ -72,3 +72,11 @@ footer h1{
 font:small-caps 20pt 'Time New Roman', Times, serif;
 margin:0;
 }
+
+code ol{
+font-size:4pt
+}
+
+code li{
+font-size:10pt
+}

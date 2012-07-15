@@ -15,6 +15,7 @@ data TeXeme
   = TeXRaw String
   | TeXSpecial TeXSpecial
   | TeXVerbatim String
+  | TeXCode [String]
   | TeXBegin String
   | TeXEnd String
   | TeXCommand String
