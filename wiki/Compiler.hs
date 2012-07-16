@@ -24,7 +24,8 @@ data Context
     headerDepth :: Int,
     headerStack :: [Int],
     contextSuppressSpace :: Bool,
-    listingCounter :: Int
+    listingCounter :: Int,
+    definitionCounter :: Int
   }
 
 initialContext :: Context
@@ -40,7 +41,8 @@ initialContext
     headerDepth = 0,
     headerStack = [],
     contextSuppressSpace = False,
-    listingCounter = 0
+    listingCounter = 0,
+    definitionCounter = 0
   }
 
 environmentMap :: Map.Map String (String, String)
@@ -237,6 +239,9 @@ compileTeXemes ((TeXVerbatim text):tail) = do
   compileTeXemes tail
 compileTeXemes ((TeXBegin name):tail) = do
   closeParagraph
+  case name of
+    "definition" -> writeDefinitionCounter
+    _ -> return ()
   addToOutput $ fst $ environmentMap Map.! name
   context <- getContext
   setContext context {
@@ -343,6 +348,8 @@ compileTeXemes (
     let numbers = (joinNumbers (headerStack context)) ++ ('.' : (show listing))
     setContext $ context { listingCounter = listing + 1 }
     addManyToOutput ["<a class='margin' name='L.",
+      numbers,
+      "' href='#L.",
       numbers,
       "'>Listing ",
       numbers,
@@ -483,4 +490,19 @@ joinNumbers :: [Int] -> String
 joinNumbers [] = ""
 joinNumbers (number : tail) =
   List.foldl' (\text i -> showString (show i) text) (show number) tail
+
+
+writeDefinitionCounter :: TeX ()
+writeDefinitionCounter = do
+  context <- getContext
+  let definition = (definitionCounter context)
+  let numbers = (joinNumbers (headerStack context)) ++ ('.' : (show definition))
+  setContext $ context { definitionCounter = definition + 1 }
+  addManyToOutput ["<a class='margin' name='D.",
+    numbers,
+    "' href='#D.",
+    numbers,
+    "'>Definition ",
+    numbers,
+    "</a>"]
 

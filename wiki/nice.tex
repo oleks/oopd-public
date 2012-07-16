@@ -25,7 +25,7 @@ looking like this:
 \end{code}
 
 While comprehensible, this does not read very well. Most languages we're used
-to, i.e. \wikipedia{Indo-european}{Indo-European} languages, read
+to, i.e. \wikipedia{Indo-european}{Indo-European languages}, read
 left-to-right, top-to-bottom. Here, the flow of the program is expressed
 right-to-left, and there is no notion of top-down descent at all. If anything,
 there's a notion of bottom-up ascent, if we for instance, lay out the program
@@ -74,7 +74,7 @@ we're doing, rather than ``how'' we're doing it.
 
 \end{definition}
 
-An alternative functional program for this procedure could be:
+An alternative functional program could be:
 
 \begin{code}
 let
@@ -86,14 +86,10 @@ in
   stack cleanLaundry
 \end{code}
 
-\begin{definition}
+We refer to lines 1--7 as the ``\mono{let}-block'', lines 2--4 as the
+``\mono{let}-definitions'', and line 7 as the ``\mono{let}-expression''.
 
-We refer to lines 1--7 as the let-block, lines 2--4 as the let-definitions, and
-line 7 as the let-expression.
-
-\end{definition}
-
-In functional programming, the \mono{let}-syntax is used to reduce the
+In functional programming, the \mono{let}-block can be used to reduce the
 complexity of an expression by letting you give its subexpression intuitive
 names. This allows the reader to read the expression, and delve into the
 details of its constituents only if the reader wishes to do so. As long as

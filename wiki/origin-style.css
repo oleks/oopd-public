@@ -11,8 +11,12 @@ article h1{
 color:#003366
 }
 
-p a{
+article a{
 color:#901A1E
+}
+
+article a[target="_blank"]{
+text-decoration:overline;
 }
 
 article{
@@ -22,15 +26,25 @@ width:33em
 
 .tooltip{
 width:33em;
-cursor:help;
-text-decoration:underline
+cursor:pointer;
+color:#901A1E
 }
 
-.margin{
+h1 a.margin{
 display:inline-block;
 width:175px;
 text-align:right;
-margin-left:-175px
+padding:0;
+color:inherit;
+font-size:inherit
+}
+
+a.margin{
+float:left;
+margin-left:-175px;
+padding-left:10px;
+color:#AAA;
+font-size:10pt;
 }
 
 footer{
@@ -87,3 +101,4 @@ display:inline;
 font-size:12pt;
 color:#231F20;
 }
+
