@@ -23,7 +23,8 @@ data Context
     groupStack :: [String],
     headerDepth :: Int,
     headerStack :: [Int],
-    contextSuppressSpace :: Bool
+    contextSuppressSpace :: Bool,
+    listingCounter :: Int
   }
 
 initialContext :: Context
@@ -38,7 +39,8 @@ initialContext
     groupStack = [],
     headerDepth = 0,
     headerStack = [],
-    contextSuppressSpace = False
+    contextSuppressSpace = False,
+    listingCounter = 0
   }
 
 environmentMap :: Map.Map String (String, String)
@@ -325,12 +327,29 @@ compileTeXemes (
     addToParagraph "</code>"
     compileTeXemes tail
 compileTeXemes (
+  (TeXCommand "mono") :
+  (TeXGroup paragraphs) :
+  tail) = do
+    addToParagraph "<tt>"
+    compileTeXGroup paragraphs
+    addToParagraph "</tt>"
+    compileTeXemes tail
+compileTeXemes (
   (TeXCode code) :
   tail) = do
     closeParagraph
-    addToOutput "<code><ol>"
+    context <- getContext
+    let listing = (listingCounter context)
+    let numbers = (joinNumbers (headerStack context)) ++ ('.' : (show listing))
+    setContext $ context { listingCounter = listing + 1 }
+    addManyToOutput ["<a class='margin' name='L.",
+      numbers,
+      "'>Listing ",
+      numbers,
+      "</a>"]
+    addToOutput "<code class='listing'><ol>"
     liftOutput (compileCode code)
-    addToOutput "</code></ol>"
+    addToOutput "</ol></code>"
     compileTeXemes tail
 compileTeXemes (
   (TeXCommand "wikipedia") :
@@ -453,14 +472,15 @@ advanceHeader depth = do
 getHeaderNumeral :: TeX String
 getHeaderNumeral = do
   context <- getContext
-  return $ let
-      numbers = headerStack context
-    in
-      showString "<a class='margin' name='S." $
-      prependNumbers numbers $
-      showString "'>&sect; " $
-      prependNumbers numbers "&nbsp;</a>"
+  let numbers = joinNumbers (headerStack context)
+  return $
+    showString "<a class='margin' name='S." $
+    showString numbers $
+    showString "'>&sect; " $
+    showString numbers ".&nbsp;</a>"
 
-prependNumbers :: [Int] -> String -> String
-prependNumbers numbers text =
-  List.foldl' (\text i -> showString (show i) ('.' : text)) text numbers
+joinNumbers :: [Int] -> String
+joinNumbers [] = ""
+joinNumbers (number : tail) =
+  List.foldl' (\text i -> showString (show i) text) (show number) tail
+
