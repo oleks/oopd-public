@@ -93,7 +93,7 @@ line 7 as the let-expression.
 
 \end{definition}
 
-In functional programming, the \code{let}-syntax is used to reduce the
+In functional programming, the \mono{let}-syntax is used to reduce the
 complexity of an expression by letting you give its subexpression intuitive
 names. This allows the reader to read the expression, and delve into the
 details of its constituents only if the reader wishes to do so. As long as
@@ -106,10 +106,10 @@ important aspects of ``doing the laundry''. We're so eager not to tell the
 reader ``how'' we're doing it, that we forget to tell the reader ``what'' we're
 doing.
 
-The \code{let}-syntax does however provide for a nice segway into another
+The \mono{let}-syntax does however provide for a nice segway into another
 \explain{programming paradigm}{A way of writing a particular class of programms
 well.}, more suitable for writing out \emph{procedures}. In particular, the
-\code{let}-syntax provides more than a simple mechanism for naming
+\mono{let}-syntax provides more than a simple mechanism for naming
 subexpressions. Note, how we could use the name \var{dirtyWhites} when we
 defined \var{cleanWetWhites}, or how we could use \var{cleanWetWhites} when we
 defined \var{cleanLaundry}.
@@ -117,7 +117,7 @@ defined \var{cleanLaundry}.
 It is as if some sort of ``state'' is retained from one defintion to the next,
 such that names defined further up can be used in definitions further down. If
 we represent ``state'' as the set of names available for use in an expression
-we can specify how the state develops throughout the \code{let}-block: 
+we can specify how the state develops throughout the \mono{let}-block: 
 
 \begin{code}
 let
@@ -132,14 +132,14 @@ in
     cleanWetWhites, cleanWetColours, cleanLaundry}
 \end{code}
 
-It seems overly excessive to have the state at the \code{let}-expression
+It seems overly excessive to have the state at the \mono{let}-expression
 contain all these ``intermediate'' names, such as \var{dirtyWhites},
-\var{cleanWetColours}, etc. All we really need in the \code{let}-expression is
+\var{cleanWetColours}, etc. All we really need in the \mono{let}-expression is
 the clean laundry.  What's more, it does not conceptually make sense to be able
 to use the dirty, or wet laundry once the laundry has been washed and
 dried\ldots 
 
-While we could attempt mitigate for this using nested \code{let}-blocks or
+While we could attempt mitigate for this using nested \mono{let}-blocks or
 \explain{auxiliary functions}{Functions whos sole purpose is to make other
 functions easier to comprehend.}, the final code will not be as easy as
 1-2-3-4-5, i.e. our initial specification of the procedure.

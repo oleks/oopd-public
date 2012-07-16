@@ -75,9 +75,9 @@ compileCodeLines :: [String] -> Code ()
 compileCodeLines [] = return ()
 compileCodeLines (line : tail) = do
   lineNumber <- newLine
-  addToOutput "<li>"
+  addToOutput "<li><pre>"
   addToOutput line
-  addToOutput "</li>"
+  addToOutput "</pre></li>"
   case tail of
     [] -> return ()
     _ -> do
