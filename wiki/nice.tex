@@ -86,17 +86,17 @@ in
   stack cleanLaundry
 \end{code}
 
-We refer to lines 1--7 as the ``\mono{let}-block'', lines 2--4 as the
-``\mono{let}-definitions'', and line 7 as the ``\mono{let}-expression''.
+We'll refer to lines 1--7 as a ``\mono{let}-block'', lines 2--4 as a
+``\mono{let}-definitions'', and line 7 as a ``\mono{let}-expression''.
 
-In functional programming, the \mono{let}-block can be used to reduce the
-complexity of an expression by letting you give its subexpression intuitive
-names. This allows the reader to read the expression, and delve into the
-details of its constituents only if the reader wishes to do so. As long as
-important deails are retained, this is a useful technique for making your
-programs more readable.
+In functional programming, the \mono{let}-syntax can be used to reduce the
+complexity of an expression by giving intuitive names to subexpressions. This
+allows the reader to read the expression, and delve into the details of its
+constituents only if the reader wishes to do so. As long as important deails
+are retained, this is a useful technique for making your programs more
+readable.
 
-In this particular case, the expression reduces to \code{stack
+In this particular case, the expression reduces to simply \code{stack
 cleanLaundry}. This seems overly declarative. We're completely disregarding the
 important aspects of ``doing the laundry''. We're so eager not to tell the
 reader ``how'' we're doing it, that we forget to tell the reader ``what'' we're
@@ -106,7 +106,7 @@ The \mono{let}-syntax does however provide for a nice segway into another
 \explain{programming paradigm}{A way of writing a particular class of programms
 well.}, more suitable for writing out \emph{procedures}. In particular, the
 \mono{let}-syntax provides more than a simple mechanism for naming
-subexpressions. Note, how we could use the name \var{dirtyWhites} when we
+subexpressions. Notice how we could use the name \var{dirtyWhites} when we
 defined \var{cleanWetWhites}, or how we could use \var{cleanWetWhites} when we
 defined \var{cleanLaundry}.
 
@@ -128,20 +128,30 @@ in
     cleanWetWhites, cleanWetColours, cleanLaundry}
 \end{code}
 
-It seems overly excessive to have the state at the \mono{let}-expression
-contain all these ``intermediate'' names, such as \var{dirtyWhites},
-\var{cleanWetColours}, etc. All we really need in the \mono{let}-expression is
-the clean laundry.  What's more, it does not conceptually make sense to be able
-to use the dirty, or wet laundry once the laundry has been washed and
-dried\ldots 
+It seems overly excessive to have the state at the \mono{let}-expression (lines
+9--10) contain all these ``intermediate'' names, such as \var{dirtyWhites},
+\var{cleanWetColours}, etc. All we really want in the \mono{let}-expression is
+the \var{cleanLaundry}. What's more, it does not conceptually make sense to be
+able to use the dirty, or wet laundry once the laundry has been washed and
+dried, right? A more suitable programming paradigm would allow us to easily
+make sure that we don't do such silly things as ``doing the laundry'' by
+``stacking the dirty laundry''.
 
-While we could attempt mitigate for this using nested \mono{let}-blocks or
+While we could attempt to fix this using nested \mono{let}-blocks or
 \explain{auxiliary functions}{Functions whos sole purpose is to make other
 functions easier to comprehend.}, the final code will not be as easy as
-1-2-3-4-5, i.e. our initial specification of the procedure.
+1-2-3-4-5, i.e. as simple as our initial specification of the procedure.
 
+The thing that is getting in the way here is that in functional programming
+we're dealing with \emph{immutable} values.
 
+\begin{definition}
+An immutable value cannot be mutated into another value.
+\end{definition}
 
+That is, in a functional paradigm, we're programming by defining 
+
+An alternative programming paradigm, the \emph{imperative}, 
 
 {\bf Assignment}
 

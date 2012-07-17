@@ -16,7 +16,7 @@ color:#901A1E
 }
 
 article a[target="_blank"]{
-text-decoration:overline;
+text-decoration:overline underline;
 }
 
 article{
@@ -44,7 +44,6 @@ float:left;
 margin-left:-175px;
 padding-left:10px;
 color:#AAA;
-font-size:10pt;
 }
 
 footer{
