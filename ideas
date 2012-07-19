@@ -241,3 +241,10 @@ Goals:
   Focus on correctness, complexity and program composition.
   Create tools for students and instructors such as an online assignment
   system, akin to https://www.interviewstreet.com/challenges/.
+
+
+Assignments
+
+A type-safe, generic resource bundle.
+- An assignment in both generics and serialization.
+- http://java.sun.com/developer/technicalArticles/Intl/ResourceBundles/
