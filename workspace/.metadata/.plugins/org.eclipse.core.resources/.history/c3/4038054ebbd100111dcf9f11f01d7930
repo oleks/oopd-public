@@ -1,0 +1,14 @@
+package diku.oopd.util;
+
+import java.util.HashMap;
+
+public class HashMap<K,V>
+{
+  private java.util.HashMap<K,V> hashMap;
+  
+  public HashMap()
+  {
+    this.hashMap = new java.util.HashMap<>();
+  }
+
+}

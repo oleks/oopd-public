@@ -1,0 +1,7 @@
+package diku.oopd.util;
+
+public class ResourceBundle<K,V>
+{
+  private HashMap<K,V> resourceBundle;
+
+}

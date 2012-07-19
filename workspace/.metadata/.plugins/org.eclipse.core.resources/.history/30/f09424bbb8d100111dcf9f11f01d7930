@@ -1,0 +1,16 @@
+package diku.oopd.regneark;
+
+public class Main
+{
+  public static void main(String[] _)
+  {
+    java.awt.EventQueue.invokeLater(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        new MainView();
+      }
+    });
+  }
+}

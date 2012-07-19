@@ -1,0 +1,13 @@
+package diku.oopd.gui;
+
+import javax.swing.JTable;
+
+public class Table
+{
+  private JTable table;
+  
+  public Table()
+  {
+    this.table = new JTable();
+  }
+}

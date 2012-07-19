@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="javax.swing.JFrame"/>
+<fullyQualifiedTypeName name="diku.oopd.regneark.view.MainView"/>
+<fullyQualifiedTypeName name="diku.oopd.util.ResourceBundle"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="edu.umd.cs.findbugs.annotations.CheckForNull"/>
+<fullyQualifiedTypeName name="javax.annotation.CheckForNull"/>
+<fullyQualifiedTypeName name="javax.annotation.Nonnull"/>
+</qualifiedTypeNameHistroy>

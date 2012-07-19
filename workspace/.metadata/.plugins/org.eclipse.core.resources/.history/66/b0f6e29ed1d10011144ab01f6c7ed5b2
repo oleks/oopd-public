@@ -1,0 +1,12 @@
+package diku.oopd.gui;
+
+public abstract class TableModel
+{
+  private javax.swing.table.TableModel tableModel;
+  
+  javax.swing.table.TableModel getTableModel()
+  {
+    return this.tableModel;
+  }
+
+}

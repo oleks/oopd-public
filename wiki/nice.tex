@@ -133,23 +133,59 @@ It seems overly excessive to have the state at the \mono{let}-expression (lines
 \var{cleanWetColours}, etc. All we really want in the \mono{let}-expression is
 the \var{cleanLaundry}. What's more, it does not conceptually make sense to be
 able to use the dirty, or wet laundry once the laundry has been washed and
-dried, right? A more suitable programming paradigm would allow us to easily
-make sure that we don't do such silly things as ``doing the laundry'' by
-``stacking the dirty laundry''.
+dried, right? Instead, we'd like for the state develop in a fashion similar to
+the following:
+
+\begin{code}
+{dirtyLaundry}
+{dirtyWhites, dirtyColours}
+{cleanWetWhites, cleanWetColours}
+{cleanDryLaundry}
+\end{code}
 
 While we could attempt to fix this using nested \mono{let}-blocks or
 \explain{auxiliary functions}{Functions whos sole purpose is to make other
 functions easier to comprehend.}, the final code will not be as easy as
 1-2-3-4-5, i.e. as simple as our initial specification of the procedure.
 
-The thing that is getting in the way here is that in functional programming
-we're dealing with \emph{immutable} values.
+The thing that is getting in the way here is the functional paradigm we're
+dealing with \emph{immutable} values. That is, values that can be created and
+destroyed, but not modified. Indeed, if the pile of laundry was a
+\emph{mutable} value, we could simply step-wise modify that value from a dirty
+pile to a clean stack. After-all, this resembles what we do with the laundry in
+real life.
+
+An alternative programming paradigm, the \emph{imperative}, allows us to write
+the program like this:
+
+\begin{code}
+splitDirtyLaundry(laundry)
+washWhites(laundry)
+washColours(laundry)
+cleanWetColours = wash(dirtyColours)
+dry(laundry)
+stack(laundry)
+\end{code}
+
+Here, \var{laundry} is a value that begins as a pile of dirty laundry. In step
+1 it is \emph{transformed} into another value: a pair of piles --- whites and
+colours. At this point, we can think of \var{laundry} as a container, say a
+two-compartment basket. We can then access the piles in the respective
+compartments using what is known as the \emph{dot-syntax}, i.e.
+\var{laundry.whites} and \var{laundry.colours}. After the laundry is washed, it
+is put back in the same compartment. In step 4, we pick up the laundry from
+both compartments and hang it up to dry. The laundry is thus transformed into a
+clean, dry pile of laundry. In the last step, we simply take this pile and
+neatly stack it. The resulting \var{laundry} is hence a neat stack of clean,
+dry laundry.
 
 \begin{definition}
-An immutable value cannot be mutated into another value.
+An immutable value does not change.
 \end{definition}
 
-That is, in a functional paradigm, we're programming by defining 
+In the functional paradigm, we're programming by defining mathematical
+functions. Functions themselves are defined in terms of applications of other
+functions, and branching based on the outcomes of boolean predicates.
 
 An alternative programming paradigm, the \emph{imperative}, 
 

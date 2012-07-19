@@ -1,2 +1,6 @@
 Why we use ordered lists for numbering instead of numbering in Haskell: allows
 easy copying of source code, which indeed excludes line numbers.
+
+make the logo smaller
+footnotes (for those seeking more details)
+jquery toggle for explanations.

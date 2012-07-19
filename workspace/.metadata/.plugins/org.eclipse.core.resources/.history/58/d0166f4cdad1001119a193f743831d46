@@ -1,0 +1,15 @@
+package diku.oopd.regneark.view;
+
+import javax.swing.JFrame;
+
+public class MainView extends JFrame
+{
+  private static final long serialVersionUID = -5626410877829943310L;
+
+  private Table table;
+  
+  public MainView()
+  {
+    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+  }
+}

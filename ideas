@@ -246,5 +246,32 @@ Goals:
 Assignments
 
 A type-safe, generic resource bundle.
+
 - An assignment in both generics and serialization.
+
 - http://java.sun.com/developer/technicalArticles/Intl/ResourceBundles/
+
+Why Map<K,V>.get takes in an Object:
+
+- This is somewhat against the object-oriented spirit. Two List implementations
+  can be thought of as equal if they contain equal elements.
+
+- http://stackoverflow.com/questions/857420/what-are-the-reasons-why-map-getobject-key-is-not-fully-generic
+
+- OLEKS: well, then the implementer should use List as the generic type then.
+
+Why Java:
+
+- Cross-platform.
+
+- It would be too big of a change wrt. course SIS specification.
+
+HashMap vs. HashTable
+
+- HashTable in theoretic litterature
+
+- HashMap/Map is the name in Java, Go and C++. Dictionary is the name in
+  Python/C#.
+
+- The latter is probably best, and deserves a discussion wrt. to the FP
+  understanding of "map".

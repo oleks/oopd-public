@@ -1,0 +1,61 @@
+package diku.oopd.gui;
+
+import java.util.ArrayList;
+
+import javax.swing.event.TableModelListener;
+
+import org.eclipse.jdt.annotation.Nullable;
+
+public class TableModel<T> extends AbstractTableModel<T>
+{
+  @Nullable
+  private ArrayList<TableModelListener> listeners;
+  
+  @Override
+  public void removeTableModelListener(@Nullable TableModelListener listener)
+  {
+    this.listeners.remove(listener);
+  }
+
+  @Override
+  public void addTableModelListener(@Nullable TableModelListener listener)
+  {
+    this.listeners.add(listener);
+  }
+
+  @Override
+  public boolean isCellEditable(int rowIndex, int columnIndex)
+  {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public void setValueAt(T value, int rowIndex, int columnIndex)
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public T getValueAt(int rowIndex, int columnIndex)
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public int getRowCount()
+  {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public int getColumnCount()
+  {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+}

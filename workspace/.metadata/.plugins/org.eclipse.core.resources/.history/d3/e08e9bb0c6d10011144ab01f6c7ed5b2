@@ -1,0 +1,21 @@
+package diku.oopd.util;
+
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.NonNullByDefault;
+
+public abstract class ResourceBundle<K,V>
+{
+  @NonNull
+  private HashMap<K,V> resourceBundle;
+  
+  protected ResourceBundle()
+  {
+    this.resourceBundle = new HashMap<>();
+  }
+  
+  @NonNull
+  public V getValue(K key)
+  {
+    return this.resourceBundle.get(key);
+  }
+}

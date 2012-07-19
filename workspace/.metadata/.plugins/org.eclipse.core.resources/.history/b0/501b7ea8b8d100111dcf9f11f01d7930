@@ -1,0 +1,6 @@
+package diku.oopd.regneark.view;
+
+public class MainView extends JFrame
+{
+
+}

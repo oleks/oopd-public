@@ -1,0 +1,20 @@
+package diku.oopd.gui;
+
+import java.awt.Component;
+
+import javax.swing.JTable;
+
+public class Table<T>
+{
+  private JTable table;
+  
+  public Table(TableModel<T> tableModel)
+  {
+    this.table = new JTable(tableModel.getTableModel());
+  }
+  
+  public Component getComponent()
+  {
+    return this.table;
+  }
+}

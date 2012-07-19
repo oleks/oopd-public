@@ -1,0 +1,16 @@
+package diku.oopd.util;
+
+public abstract class ResourceBundle<K,V>
+{
+  private HashMap<K,V> resourceBundle;
+  
+  protected ResourceBundle()
+  {
+    this.resourceBundle = new HashMap<>();
+  }
+  
+  public V getValue(K key)
+  {
+    return this.resourceBundle.get(key);
+  }
+}

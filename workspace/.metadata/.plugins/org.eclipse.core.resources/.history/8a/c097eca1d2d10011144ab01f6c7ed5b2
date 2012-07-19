@@ -1,0 +1,90 @@
+package diku.oopd.gui;
+
+import javax.swing.event.TableModelListener;
+
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.eclipse.jdt.annotation.Nullable;
+
+public abstract class TableModel<T>
+{
+  private class MyTableModel implements javax.swing.table.TableModel
+  {
+    
+    @Override
+    public void addTableModelListener(@Nullable TableModelListener l)
+    {
+      // TODO Auto-generated method stub
+      
+    }
+
+    @Override
+    public Class<?> getColumnClass(int columnIndex)
+    {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public int getColumnCount()
+    {
+      // TODO Auto-generated method stub
+      return 0;
+    }
+
+    @Override
+    public String getColumnName(int columnIndex)
+    {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public int getRowCount()
+    {
+      // TODO Auto-generated method stub
+      return 0;
+    }
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex)
+    {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex)
+    {
+      // TODO Auto-generated method stub
+      return false;
+    }
+
+    @Override
+    public void removeTableModelListener(@Nullable TableModelListener l)
+    {
+      // TODO Auto-generated method stub
+      
+    }
+
+    @Override
+    public void setValueAt(@Nullable Object aValue, int rowIndex, int columnIndex)
+    {
+      // TODO Auto-generated method stub
+      
+    } 
+  }
+  
+  private MyTableModel tableModel;
+  
+  public TableModel()
+  {
+    this.tableModel = new MyTableModel();
+  }
+  
+  javax.swing.table.TableModel getTableModel2()
+  {
+    return this.tableModel;
+  }
+
+}
