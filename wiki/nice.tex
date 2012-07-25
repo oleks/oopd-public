@@ -109,8 +109,8 @@ subexpressions. Notice, how we could use the name \var{dirtyWhites} when we
 defined \var{cleanWetWhites}, or how we could use \var{cleanWetWhites} when we
 defined \var{cleanLaundry}.
 
-It is as if some sort of ``state'' is retained from one defintion to the next,
-in the sense that a name defined further up can be used in definitions further
+It is as if some sort of ``state'' evolves from one defintion to the next, in
+the sense that a name defined further up can be used in definitions further
 down. If we represent ``state'' as the set of names available for use in an
 expression we can specify how the state develops throughout the
 \mono{let}-block: 
@@ -155,17 +155,18 @@ and destroyed, but not modified. Indeed, if the pile of laundry was a
 pile to a clean stack. After-all, this resembles what we do with the laundry in
 real life.
 
-Let us concentrate around a single statement:
+Let us now focus on a single statement:
 
 \begin{code}
-dirtyWhites, dirtyColours = split(dirtyLaundry)
+dirtyWhites, dirtyColours = split dirtyLaundry
 \end{code}
 
-If we let \var{dirtyLaundry} be a basket of mixed dirty laundry, we'de like for
-the effect of this \emph{assignment} to be that \var{dirtyWhites} becomes a
-pile of dirty whites, and \var{dirtyColours} becomes a pile of dirty colours,
-while \var{dirtyLaundry} becomes an \emph{empty} basket. That is, we'd like the
-laundry is \emph{moved} from the basket to the respective piles.
+If we let \var{dirtyLaundry} initially be a basket of mixed dirty laundry,
+we'de like for the \emph{effect} of this statement to be that \var{dirtyWhites}
+becomes a pile of dirty whites, and \var{dirtyColours} becomes a pile of dirty
+colours, while \var{dirtyLaundry} becomes an \emph{empty} basket. That is, we'd
+like for the laundry to be \emph{moved} from the basket to the respective
+piles.
 
 An alternative programming paradigm, the \emph{imperative}, allows us to write
 the program like this:
