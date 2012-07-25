@@ -275,3 +275,10 @@ HashMap vs. HashTable
 
 - The latter is probably best, and deserves a discussion wrt. to the FP
   understanding of "map".
+
+Reasons for Excel
+
+- It is an example of something every student has supposedly tried.
+
+- OOPD is to a large extent a course about how every-day systems are built, and
+  to a lesser extent about object-oriented programming (or design) itself.

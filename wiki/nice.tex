@@ -40,11 +40,11 @@ like this:
 
 This reads like we're putting the cart before the horse. Indeed, some tasks ---
 such as, doing the laundry, cooking a meal, writing a program, etc. --- are
-inherently sequential. Functional programming languages can be
-\explain{syntactically}{A programming language has syntactic rules defining the
-valid positioning of symbols. In this case, the syntactic rule is that the name
-precedes the arguments in a function call.} unfit for writing such programs
-well.
+inherently sequential, i.e. they are done by performing a sequence of steps.
+Functional programming languages can be \explain{syntactically}{A programming
+language has syntactic rules defining the valid positioning of symbols. In this
+case, the syntactic rule is that the name precedes the arguments in a function
+call.} unfit for writing such programs well.
 
 We will develop the notion of a \emph{well-written program} throughout these
 lecture notes, but we begin with the following definition:
@@ -64,8 +64,8 @@ to facilitate a the review and evolution of your programs by your peers.
 We were also somewhat \emph{declarative} when we wrote the functional program.
 For instance, we've left out the fact that we should wash whites before we wash
 colours. Actually, we didn't even mention that we split the laundry into whites
-and colours; we've left it up to the \var{wash} and \var{split} function
-definitions to discuss such ``details''.
+and colours; we've left it up to the \var{wash} and \var{split} functions to
+discuss such ``details''.
 
 \begin{definition}
 
@@ -90,11 +90,10 @@ We'll refer to lines 1--7 as a ``\mono{let}-block'', lines 2--4 as a
 ``\mono{let}-definitions'', and line 7 as a ``\mono{let}-expression''.
 
 In functional programming, the \mono{let}-syntax can be used to reduce the
-complexity of an expression by giving intuitive names to subexpressions. This
-allows the reader to read the expression, and delve into the details of its
-constituents only if the reader wishes to do so. As long as important deails
-are retained, this is a useful technique for making your programs more
-readable.
+complexity of an expression by giving intuitive names to some of its
+constituents. This allows the reader to read the expression, and delve into the
+details, if the reader wishes to do so. As long as important deails are
+retained, this is a useful technique for making your programs more readable.
 
 In this particular case, the expression reduces to simply \code{stack
 cleanLaundry}. This seems overly declarative. We're completely disregarding the
@@ -104,16 +103,17 @@ doing.
 
 The \mono{let}-syntax does however provide for a nice segway into another
 \explain{programming paradigm}{A way of writing a particular class of programms
-well.}, more suitable for writing out \emph{procedures}. In particular, the
-\mono{let}-syntax provides more than a simple mechanism for naming
-subexpressions. Notice how we could use the name \var{dirtyWhites} when we
+well.}, more suitable for writing \emph{procedures} like this. In particular,
+the \mono{let}-syntax provides more than a simple mechanism for naming
+subexpressions. Notice, how we could use the name \var{dirtyWhites} when we
 defined \var{cleanWetWhites}, or how we could use \var{cleanWetWhites} when we
 defined \var{cleanLaundry}.
 
 It is as if some sort of ``state'' is retained from one defintion to the next,
-such that names defined further up can be used in definitions further down. If
-we represent ``state'' as the set of names available for use in an expression
-we can specify how the state develops throughout the \mono{let}-block: 
+in the sense that a name defined further up can be used in definitions further
+down. If we represent ``state'' as the set of names available for use in an
+expression we can specify how the state develops throughout the
+\mono{let}-block: 
 
 \begin{code}
 let
@@ -133,7 +133,7 @@ It seems overly excessive to have the state at the \mono{let}-expression (lines
 \var{cleanWetColours}, etc. All we really want in the \mono{let}-expression is
 the \var{cleanLaundry}. What's more, it does not conceptually make sense to be
 able to use the dirty, or wet laundry once the laundry has been washed and
-dried, right? Instead, we'd like for the state develop in a fashion similar to
+dried, right? Indeed, we'd like for the state develop in a fashion similar to
 the following:
 
 \begin{code}
@@ -148,12 +148,24 @@ While we could attempt to fix this using nested \mono{let}-blocks or
 functions easier to comprehend.}, the final code will not be as easy as
 1-2-3-4-5, i.e. as simple as our initial specification of the procedure.
 
-The thing that is getting in the way here is the functional paradigm we're
-dealing with \emph{immutable} values. That is, values that can be created and
-destroyed, but not modified. Indeed, if the pile of laundry was a
+The thing that is getting in the way here is that in the functional paradigm
+we're dealing with \emph{immutable} values. That is, values that can be created
+and destroyed, but not modified. Indeed, if the pile of laundry was a
 \emph{mutable} value, we could simply step-wise modify that value from a dirty
 pile to a clean stack. After-all, this resembles what we do with the laundry in
 real life.
+
+Let us concentrate around a single statement:
+
+\begin{code}
+dirtyWhites, dirtyColours = split(dirtyLaundry)
+\end{code}
+
+If we let \var{dirtyLaundry} be a basket of mixed dirty laundry, we'de like for
+the effect of this \emph{assignment} to be that \var{dirtyWhites} becomes a
+pile of dirty whites, and \var{dirtyColours} becomes a pile of dirty colours,
+while \var{dirtyLaundry} becomes an \emph{empty} basket. That is, we'd like the
+laundry is \emph{moved} from the basket to the respective piles.
 
 An alternative programming paradigm, the \emph{imperative}, allows us to write
 the program like this:
@@ -162,13 +174,12 @@ the program like this:
 splitDirtyLaundry(laundry)
 washWhites(laundry)
 washColours(laundry)
-cleanWetColours = wash(dirtyColours)
 dry(laundry)
 stack(laundry)
 \end{code}
 
 Here, \var{laundry} is a value that begins as a pile of dirty laundry. In step
-1 it is \emph{transformed} into another value: a pair of piles --- whites and
+1, it is \emph{transformed} into another value: a pair of piles --- whites and
 colours. At this point, we can think of \var{laundry} as a container, say a
 two-compartment basket. We can then access the piles in the respective
 compartments using what is known as the \emph{dot-syntax}, i.e.

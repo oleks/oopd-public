@@ -35,3 +35,14 @@ Til møde med Knud:
 
 
 When introducing the java Hello World, http://thecodelesscode.com/case/14
+
+Tell the students that they are encouraged to use the recently acquired
+knowledge in IP, in particular wrt. recursion.
+
+Say that the first assignment was inspired by Multiple Paradigms in CS 1.
+
+We generally agree with point 4.1 in Java as First Programming Language: A
+Critical Evaluation.
+
+In blocks 1 and 2 we really introduce 3 paradigms rather than 2: the
+functional, imperative and object-oriented.

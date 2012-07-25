@@ -11,9 +11,14 @@ public abstract class ResourceBundle<K,V>
     this.resourceBundle = new HashMap<>();
   }
   
-  @Nullable
   public V getValue(K key)
   {
-    return this.resourceBundle.get(key);
+    V result = this.resourceBundle.get(key);
+    
+    if (result == null)
+    {
+      return (V)(new Object());
+    }
+    return result;
   }
 }

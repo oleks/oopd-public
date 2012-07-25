@@ -1,7 +1,0 @@
-package diku.oopd.util;
-
-public class HashMap<K,V>
-{
-  private java.util.HashMap<K,V> hashMap;
-
-}

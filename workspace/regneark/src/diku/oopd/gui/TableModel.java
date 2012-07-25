@@ -41,6 +41,7 @@ public class TableModel<T> extends AbstractTableModel<T>
   @Override
   public void setValueAt(T value, int rowIndex, int columnIndex)
   {
+    System.out.println("nice: " + rowIndex + ", " + columnIndex);
     this.values[rowIndex][columnIndex] = value;
   }
 

@@ -7,7 +7,7 @@ import javax.swing.JTable;
 import org.eclipse.jdt.annotation.Nullable;
 
 public class Table<T>
-{
+{ 
   private JTable table;
   
   public Table(AbstractTableModel<T> tableModel)

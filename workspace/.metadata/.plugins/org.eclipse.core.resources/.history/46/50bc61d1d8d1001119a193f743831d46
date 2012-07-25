@@ -1,6 +1,0 @@
-package diku.oopd.gui;
-
-public class TableModel extends AbstractTableModel<T>
-{
-
-}
