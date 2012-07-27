@@ -91,11 +91,12 @@ We'll refer to lines 1--7 as a ``\mono{let}-block'', lines 2--4 as a
 
 In functional programming, the \mono{let}-syntax can be used to reduce the
 complexity of an expression by giving intuitive names to some of its
-constituents. This allows the reader to read the expression, and delve into the
-details, if the reader wishes to do so. As long as important deails are
-retained, this is a useful technique for making your programs more readable.
+constituents. This lets the reader read a simpler expression, and delve into
+the details, if necessary. As long as important details are retained in the
+\mono{let}-expression, this is a useful technique for making your programs more
+readable.
 
-In this particular case, the expression reduces to simply \code{stack
+However, in this particular case, the expression reduces to \code{stack
 cleanLaundry}. This seems overly declarative. We're completely disregarding the
 important aspects of ``doing the laundry''. We're so eager not to tell the
 reader ``how'' we're doing it, that we forget to tell the reader ``what'' we're
@@ -111,8 +112,8 @@ defined \var{cleanLaundry}.
 
 It is as if some sort of ``state'' evolves from one defintion to the next, in
 the sense that a name defined further up can be used in definitions further
-down. If we represent ``state'' as the set of names available for use in an
-expression we can specify how the state develops throughout the
+down. If we represent this ``state'' as the set of names available in the
+context of an expression, we can specify how the state develops throughout the
 \mono{let}-block: 
 
 \begin{code}
@@ -134,7 +135,7 @@ It seems overly excessive to have the state at the \mono{let}-expression (lines
 the \var{cleanLaundry}. What's more, it does not conceptually make sense to be
 able to use the dirty, or wet laundry once the laundry has been washed and
 dried, right? Indeed, we'd like for the state develop in a fashion similar to
-the following:
+this:
 
 \begin{code}
 {dirtyLaundry}
@@ -143,10 +144,10 @@ the following:
 {cleanDryLaundry}
 \end{code}
 
-While we could attempt to fix this using nested \mono{let}-blocks or
+While we could attempt to attain this using nested \mono{let}-blocks or
 \explain{auxiliary functions}{Functions whos sole purpose is to make other
-functions easier to comprehend.}, the final code will not be as easy as
-1-2-3-4-5, i.e. as simple as our initial specification of the procedure.
+functions easier to comprehend.}, the code will not be as easy as 1-2-3, i.e.
+as simple as our initial specification of the procedure.
 
 The thing that is getting in the way here is that in the functional paradigm
 we're dealing with \emph{immutable} values. That is, values that can be created
@@ -155,7 +156,7 @@ and destroyed, but not modified. Indeed, if the pile of laundry was a
 pile to a clean stack. After-all, this resembles what we do with the laundry in
 real life.
 
-Let us now focus on a single statement:
+Let us thus focus in on a single statement:
 
 \begin{code}
 dirtyWhites, dirtyColours = split dirtyLaundry
@@ -165,41 +166,37 @@ If we let \var{dirtyLaundry} initially be a basket of mixed dirty laundry,
 we'de like for the \emph{effect} of this statement to be that \var{dirtyWhites}
 becomes a pile of dirty whites, and \var{dirtyColours} becomes a pile of dirty
 colours, while \var{dirtyLaundry} becomes an \emph{empty} basket. That is, we'd
-like for the laundry to be \emph{moved} from the basket to the respective
-piles.
+like for the laundry to be \emph{moved} from the basket to their respective
+(recently created) piles.
 
-An alternative programming paradigm, the \emph{imperative}, allows us to write
-the program like this:
-
-\begin{code}
-splitDirtyLaundry(laundry)
-washWhites(laundry)
-washColours(laundry)
-dry(laundry)
-stack(laundry)
-\end{code}
-
-Here, \var{laundry} is a value that begins as a pile of dirty laundry. In step
-1, it is \emph{transformed} into another value: a pair of piles --- whites and
-colours. At this point, we can think of \var{laundry} as a container, say a
-two-compartment basket. We can then access the piles in the respective
-compartments using what is known as the \emph{dot-syntax}, i.e.
-\var{laundry.whites} and \var{laundry.colours}. After the laundry is washed, it
-is put back in the same compartment. In step 4, we pick up the laundry from
-both compartments and hang it up to dry. The laundry is thus transformed into a
-clean, dry pile of laundry. In the last step, we simply take this pile and
-neatly stack it. The resulting \var{laundry} is hence a neat stack of clean,
-dry laundry.
+At this point, it no longer makes sense to represent ``state'' as the mere set
+of names available in the context of an expression. It now also matters which
+\emph{concrete values} these names actually refer to. Indeed, before the above
+statement, \var{dirtyLaundry} is a basket of dirty clothes; after it, it is an
+empty basket.
 
 \begin{definition}
-An immutable value does not change.
+
+A mutable value, also known as a variable, is a named entity that can refer to
+different concrete values throughout the lifetime of a program.
+
 \end{definition}
 
-In the functional paradigm, we're programming by defining mathematical
-functions. Functions themselves are defined in terms of applications of other
-functions, and branching based on the outcomes of boolean predicates.
+If we represent baskets and piles as good old lists, we'd like
+for the state to evolve from
 
-An alternative programming paradigm, the \emph{imperative}, 
+\begin{code}
+{ dirtyLaundry = [A,B,C,D,...] }
+\end{code}
+
+to
+
+\begin{code}
+{ dirtyLaundry = [],
+  dirtyWhites = [A,C,...], dirtyColours = [B,D,...] }
+\end{code}
+
+Let us hence consider the \var{split} procedure. 
 
 {\bf Assignment}
 
