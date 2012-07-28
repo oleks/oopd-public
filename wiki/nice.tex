@@ -1,7 +1,7 @@
-\chapter{Imperative programming}
+\chapter{Imperative and procedural programming}
 
 Consider doing the laundry. If we have a common, house-hold washing machine at
-our disposal --- the \emph{procedure}, may look something like this:
+our disposal, the \emph{procedure} may look something like this:
 
 \begin{enumerate}
 
@@ -59,7 +59,7 @@ That is, a well-written program is comprehensible to another programmer.
 Naturally, not any old programmer will do, but someone with relative knowledge
 of the problem domain, and programming experience comparable, or superceeding
 yours, should be able to comprehend and evaluate your programs. The intent is
-to facilitate a the review and evolution of your programs by your peers.
+to facilitate the development of peer-reviewed programs.
 
 We were also somewhat \emph{declarative} when we wrote the functional program.
 For instance, we've left out the fact that we should wash whites before we wash
@@ -92,9 +92,9 @@ We'll refer to lines 1--7 as a ``\mono{let}-block'', lines 2--4 as a
 In functional programming, the \mono{let}-syntax can be used to reduce the
 complexity of an expression by giving intuitive names to some of its
 constituents. This lets the reader read a simpler expression, and delve into
-the details, if necessary. As long as important details are retained in the
-\mono{let}-expression, this is a useful technique for making your programs more
-readable.
+the details only if necessary. So long as the important details are retained in
+the \mono{let}-expression, this is a useful technique for making your programs
+more readable.
 
 However, in this particular case, the expression reduces to \code{stack
 cleanLaundry}. This seems overly declarative. We're completely disregarding the
@@ -102,9 +102,17 @@ important aspects of ``doing the laundry''. We're so eager not to tell the
 reader ``how'' we're doing it, that we forget to tell the reader ``what'' we're
 doing.
 
-The \mono{let}-syntax does however provide for a nice segway into another
-\explain{programming paradigm}{A way of writing a particular class of programms
-well.}, more suitable for writing \emph{procedures} like this. In particular,
+The \mono{let}-syntax does however provide a pathway to introducing a different
+programming paradigm, more suitable for writing \emph{procedures}.
+
+\begin{definition}
+
+A programming paradigm is a particular way of writing a certain class of
+programs well.
+
+\end{definition}
+
+In particular,
 the \mono{let}-syntax provides more than a simple mechanism for naming
 subexpressions. Notice, how we could use the name \var{dirtyWhites} when we
 defined \var{cleanWetWhites}, or how we could use \var{cleanWetWhites} when we
@@ -146,8 +154,8 @@ this:
 
 While we could attempt to attain this using nested \mono{let}-blocks or
 \explain{auxiliary functions}{Functions whos sole purpose is to make other
-functions easier to comprehend.}, the code will not be as easy as 1-2-3, i.e.
-as simple as our initial specification of the procedure.
+functions more readable.}, the code will not be as easy as 1-2-3, i.e.  as
+simple as our initial specification of the procedure.
 
 The thing that is getting in the way here is that in the functional paradigm
 we're dealing with \emph{immutable} values. That is, values that can be created
@@ -155,6 +163,13 @@ and destroyed, but not modified. Indeed, if the pile of laundry was a
 \emph{mutable} value, we could simply step-wise modify that value from a dirty
 pile to a clean stack. After-all, this resembles what we do with the laundry in
 real life.
+
+\begin{definition}
+
+A mutable value, or a ``variable'', is a named entity that can refer to
+different concrete values throughout the lifetime of a program.
+
+\end{definition}
 
 Let us thus focus in on a single statement:
 
@@ -172,17 +187,10 @@ like for the laundry to be \emph{moved} from the basket to their respective
 At this point, it no longer makes sense to represent ``state'' as the mere set
 of names available in the context of an expression. It now also matters which
 \emph{concrete values} these names actually refer to. Indeed, before the above
-statement, \var{dirtyLaundry} is a basket of dirty clothes; after it, it is an
-empty basket.
+statement, \var{dirtyLaundry} is a basket full of dirty clothes; after it, it
+is an empty basket.
 
-\begin{definition}
-
-A mutable value, also known as a variable, is a named entity that can refer to
-different concrete values throughout the lifetime of a program.
-
-\end{definition}
-
-If we represent baskets and piles as good old lists, we'd like
+In particular, if we represent baskets and piles as good old lists, we'd like
 for the state to evolve from
 
 \begin{code}
@@ -196,7 +204,25 @@ to
   dirtyWhites = [A,C,...], dirtyColours = [B,D,...] }
 \end{code}
 
-Let us hence consider the \var{split} procedure. 
+Let us now consider the \var{split} procedure: 
+
+\begin{enumerate}
+
+\item allocate space for the whites pile;
+
+\item allocate space for the colours pile;
+
+\item if the basket is empty, end the procedure;
+
+\item pick up a piece of dirty laundry;
+
+\item if the piece is white, throw it in the whites pile;
+
+\item else, throw it in the colours pile;
+
+\item go to 3.
+
+\end{enumerate}
 
 {\bf Assignment}
 

@@ -97,7 +97,6 @@ compile latex =
     header = List.foldr (\text i -> showString text i) "" $
       ["<!DOCTYPE html><html>",
       "<head>",
-      "<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono|Bitter:400,700,400italic' rel='stylesheet' type='text/css'>",
       "<link rel='stylesheet' href='style.css'>",
       "<meta charset='utf-8'>",
       "</head>",
