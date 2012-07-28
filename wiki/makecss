@@ -1,0 +1,5 @@
+#!/bin/bash
+tr -d '\n' < origin-style.css | \
+sed -e 's/;}/}/g' | \
+sed -r -e 's/([:,]) +/\1/g' \
+> style.css
