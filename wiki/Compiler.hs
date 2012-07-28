@@ -3,10 +3,12 @@ module Compiler(compile) where
 import qualified Data.List as List
 import qualified Data.Map as Map
 import qualified Data.Foldable as Foldable
+import qualified Data.Time as Time
 import Text.Show
 
 import Grammar
 import CodeCompiler
+import Html
 
 data State = OrderedList | OrderedItem
 
@@ -51,14 +53,6 @@ environmentMap = Map.fromList [
   ("itemize", ("<ul>", "</ul>")),
   ("definition", ("<dfn>", "</dfn>"))]
 
-getTeXSpecialHtml :: TeXSpecial -> String
-getTeXSpecialHtml TeXEmDash = "&mdash;"
-getTeXSpecialHtml TeXEnDash = "&ndash;"
-getTeXSpecialHtml TeXOpenSingleQuote = "&#8216;"
-getTeXSpecialHtml TeXCloseSingleQuote = "&#8217;"
-getTeXSpecialHtml TeXOpenDoubleQuote = "&#8220;"
-getTeXSpecialHtml TeXCloseDoubleQuote = "&#8221;"
-
 data TeX t = TeX {
   runTeX :: Context -> (t, Context)
 }
@@ -90,24 +84,12 @@ getFromContext f = do
   context <- getContext
   return $ f context
 
-compile :: LaTeX -> String
-compile latex =
+compile :: Time.UTCTime -> LaTeX -> String
+compile utcTime latex =
   let
     (_, context) = (runTeX (compileLaTeX latex)) initialContext
-    header = List.foldr (\text i -> showString text i) "" $
-      ["<!DOCTYPE html><html>",
-      "<head>",
-      "<link rel='stylesheet' href='style.css'>",
-      "<meta charset='utf-8'>",
-      "</head>",
-      "<body><article>"]
-    footer = List.foldr (\text i -> showString text i) "" $
-      ["</article><footer>",
-      "<address>",
-      "<h2>Datalogisk institut</h2>",
-      "<h1>University of Copenhagen</h1>",
-      "</address>",
-      "</footer></body></html>"]
+    header = htmlHeader
+    footer = htmlFooter utcTime
   in
     showString header $
     showString (List.foldl' (\text i -> showString i text) "" (output context)) $
@@ -346,7 +328,7 @@ compileTeXemes (
     let listing = (listingCounter context)
     let numbers = (joinNumbers (headerStack context)) ++ ('.' : (show listing))
     setContext $ context { listingCounter = listing + 1 }
-    addManyToOutput ["<a class='margin' name='L.",
+    addManyToOutput ["<a class='margin' id='L.",
       numbers,
       "' href='#L.",
       numbers,
@@ -480,7 +462,7 @@ getHeaderNumeral = do
   context <- getContext
   let numbers = joinNumbers (headerStack context)
   return $
-    showString "<a class='margin' name='S." $
+    showString "<a class='margin' id='S." $
     showString numbers $
     showString "'>&sect; " $
     showString numbers ".&nbsp;</a>"
@@ -497,7 +479,7 @@ writeDefinitionCounter = do
   let definition = (definitionCounter context)
   let numbers = (joinNumbers (headerStack context)) ++ ('.' : (show definition))
   setContext $ context { definitionCounter = definition + 1 }
-  addManyToOutput ["<a class='margin' name='D.",
+  addManyToOutput ["<a class='margin' id='D.",
     numbers,
     "' href='#D.",
     numbers,

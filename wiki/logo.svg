@@ -9,8 +9,8 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="744.09448819"
-   height="1052.3622047"
+   width="150"
+   height="150"
    id="svg11450"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.2732019"
-     inkscape:cx="51.37886"
-     inkscape:cy="1016.2044"
+     inkscape:zoom="0.48083261"
+     inkscape:cx="236.19402"
+     inkscape:cy="126.55169"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -36,28 +36,7 @@
      inkscape:window-y="19"
      inkscape:window-maximized="0"
      showguides="true"
-     inkscape:guide-bbox="true">
-    <sodipodi:guide
-       orientation="1,0"
-       position="0,1006.8182"
-       id="guide12979" />
-    <sodipodi:guide
-       orientation="0,1"
-       position="197.72727,1052.2727"
-       id="guide12981" />
-    <sodipodi:guide
-       orientation="1,0"
-       position="85.106383,993.08511"
-       id="guide12983" />
-    <sodipodi:guide
-       orientation="0,1"
-       position="64.893617,967.02128"
-       id="guide12985" />
-    <sodipodi:guide
-       orientation="1,0"
-       position="150.01548,1024.9749"
-       id="guide13167" />
-  </sodipodi:namedview>
+     inkscape:guide-bbox="true" />
   <metadata
      id="metadata11455">
     <rdf:RDF>
@@ -66,17 +45,18 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(0,-902.36218)">
     <g
        id="g12821"
-       transform="matrix(1.7611068,0,0,1.7611068,-10.531741,-12.04682)">
+       transform="matrix(1.7609251,0,0,1.7599953,-10.530654,890.23354)">
       <g
          transform="matrix(1.25,0,0,-1.25,48.590183,91.397543)"
          id="g3636">
