@@ -47,9 +47,15 @@ parseBegin = do
   name <- many1 alphaNum
   char '}'
   case name of
+    "codebox" -> parseCodeBox
     "code" -> parseCode
     "verbatim" -> parseVerbatim "verbatim"
     _ -> return $ TeXBegin name
+
+parseCodeBox :: Parser TeXeme
+parseCodeBox = do
+  code <- manyTill parseCodeLine (try $ parseEndSpecial "codebox")
+  return $ TeXCode code
 
 parseCode :: Parser TeXeme
 parseCode = do
@@ -59,7 +65,7 @@ parseCode = do
 parseCodeLine :: Parser String
 parseCodeLine = do
   optional $ char '\n'
-  manyTill anyChar (try $ char '\n')
+  manyTill anyChar (char '\n')
 
 parseVerbatim :: String -> Parser TeXeme
 parseVerbatim name = do

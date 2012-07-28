@@ -27,7 +27,8 @@ data Context
     headerStack :: [Int],
     contextSuppressSpace :: Bool,
     listingCounter :: Int,
-    definitionCounter :: Int
+    definitionCounter :: Int,
+    title :: String
   }
 
 initialContext :: Context
@@ -44,7 +45,8 @@ initialContext
     headerStack = [],
     contextSuppressSpace = False,
     listingCounter = 0,
-    definitionCounter = 0
+    definitionCounter = 0,
+    title = "Untitled"
   }
 
 environmentMap :: Map.Map String (String, String)
@@ -88,7 +90,7 @@ compile :: Time.UTCTime -> LaTeX -> String
 compile utcTime latex =
   let
     (_, context) = (runTeX (compileLaTeX latex)) initialContext
-    header = htmlHeader
+    header = htmlHeader (title context)
     footer = htmlFooter utcTime
   in
     showString header $
@@ -254,6 +256,10 @@ compileTeXemes (
     numeral <- getHeaderNumeral
     addManyToOutput ["<h1>", numeral]
     compileTeXGroup title
+
+    context <- getContext
+    setContext context { title = contextParagraph context }
+
     simpleCloseParagraph
     addToOutput "</h1>"
     compileTeXemes tail

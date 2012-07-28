@@ -1,6 +1,6 @@
 body{
   background:#F1F1F1;
-  font:normal 11pt 'Times New Roman',Times,serif;
+  font:normal 11pt 'Times New Roman', Times, serif;
   margin:0;
   color:#231F20
 }
@@ -45,7 +45,7 @@ a.margin{
   float:left;
   margin-left:-175px;
   padding-left:10px;
-  color:#AAA;
+  color:#777;
 }
 
 footer{
@@ -63,10 +63,14 @@ footer address{
 }
 
 address a{
-  font:small-caps 20pt 'Times New Roman', Times, serif;
+  font-variant:small-caps;
   color:#fff;
   text-decoration:none;
   display:block
+}
+
+a.diku{
+  font-size:20pt
 }
 
 a.ku{
@@ -83,7 +87,7 @@ var{
 
 code.listing{
   background:#FFF;
-  border-left:2px solid #AAA;
+  border-left:2px solid #777;
   display:block;
   padding:2px 0 2px 4px;
 }
@@ -95,7 +99,7 @@ code ol{
 
 code li{
   font-size:10pt;
-  color:#AAA;
+  color:#777;
 }
 
 code pre{

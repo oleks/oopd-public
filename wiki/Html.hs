@@ -41,14 +41,15 @@ join strings = evalReverseState "" $ do
     mapM (\string -> modify (string++)) strings
     return text
 
-htmlHeader =
+htmlHeader :: String -> String
+htmlHeader htmlTitle =
   join [
     "<!DOCTYPE html>",
     "<html lang='en'>",
     "<head>",
     "<link rel='stylesheet' href='style.css'>",
     "<meta charset='utf-8'>",
-    "<title>Fancy Title</title>",
+    "<title>", htmlTitle, "</title>",
     "</head>",
     "<body><article>"
   ]
