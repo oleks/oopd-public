@@ -60,7 +60,9 @@ htmlFooter utcTime =
     "<address>",
     externalLink "diku" "http://www.diku.dk" "Datalogisk institut",
     externalLink "ku" "http://www.ku.dk" "Copenhagen University",
-    "<span class='date'>",
+    "<time datetime='",
+    formatTime defaultTimeLocale "%Y-%m-%d" utcTime,
+    "'>",
     formatTime defaultTimeLocale "%Y %b. %d" utcTime,
     "</span>",
     "</address>",
@@ -86,5 +88,4 @@ getTeXSpecialHtml TeXOpenSingleQuote = "&#8216;"
 getTeXSpecialHtml TeXCloseSingleQuote = "&#8217;"
 getTeXSpecialHtml TeXOpenDoubleQuote = "&#8220;"
 getTeXSpecialHtml TeXCloseDoubleQuote = "&#8221;"
-
 
