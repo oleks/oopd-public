@@ -13,11 +13,11 @@ article a{
   color:#901A1E;
 }
 
-a[target="_blank"]{
+a[target="_blank"], a.margin{
   text-decoration:none
 }
 
-a[target="_blank"]:hover{
+a[target="_blank"]:hover, a.margin:hover{
   text-decoration:underline
 }
 

@@ -3,4 +3,4 @@ sed -r -e 's/^ +//g' origin-style.css | \
 tr -d '\n' | \
 sed -e 's/;}/}/g' | \
 sed -r -e 's/([:,]) +/\1/g' \
-> style.css
+> html/style.css

@@ -58,8 +58,12 @@ htmlFooter utcTime =
   join [
     "</article><footer>",
     "<address>",
+    "<div>",
     externalLink "diku" "http://www.diku.dk" "Datalogisk institut",
+    "</div>",
+    "<div>",
     externalLink "ku" "http://www.ku.dk" "Copenhagen University",
+    "</div>",
     "<time datetime='",
     formatTime defaultTimeLocale "%Y-%m-%d" utcTime,
     "'>",
