@@ -32,19 +32,19 @@ there's a notion of bottom-up ascent, if we for instance, lay out the program
 like this:
 
 \begin{codebox}
-(stack
-  (dry
-    (wash
-      (split laundry))))
+\li (stack
+\zi   (dry
+\zi     (wash
+\zi       (split laundry))))
 \end{codebox}
 
-This reads like we're putting the cart before the horse. Indeed, some tasks ---
-such as, doing the laundry, cooking a meal, writing a program, etc. --- are
-inherently sequential, i.e. they are done by performing a sequence of steps.
-Functional programming languages can be \explain{syntactically}{A programming
-language has syntactic rules defining the valid positioning of symbols. In this
-case, the syntactic rule is that the name precedes the arguments in a function
-call.} unfit for writing such programs well.
+This reads like we're putting the cart before the horse. Some tasks, such as
+doing the laundry, cooking a meal, writing a program, etc. --- are inherently
+sequential, i.e. they are done by performing a sequence of steps.  Functional
+programming languages can be \explain{syntactically}{A programming language has
+syntactic rules defining the valid positioning of symbols. In this case, the
+syntactic rule is that the name precedes the arguments in a function call.}
+unfit for writing such programs well.
 
 We will develop the notion of a \emph{well-written program} throughout these
 lecture notes, but we begin with the following definition:
@@ -124,17 +124,17 @@ down. If we represent this ``state'' as the set of names available in the
 context of an expression, we can specify how the state develops throughout the
 \mono{let}-block: 
 
-\begin{code}
-let
-  {dirtyLaundry}
-  {dirtyLaundry, dirtyWhites, dirtyColours}
-  {dirtyLaundry, dirtyWhites, dirtyColours,
-    cleanWetWhites}
-  {dirtyLaundry, dirtyWhites, dirtyColours,
-    cleanWetWhites, cleanWetColours}
-in
-  {dirtyLaundry, dirtyWhites, dirtyColours,
-    cleanWetWhites, cleanWetColours, cleanLaundry}
+\begin{codebox}
+\li let
+\li   {dirtyLaundry}
+\li   {dirtyLaundry, dirtyWhites, dirtyColours}
+\li   {dirtyLaundry, dirtyWhites, dirtyColours,
+\zi     cleanWetWhites}
+\li   {dirtyLaundry, dirtyWhites, dirtyColours,
+\zi     cleanWetWhites, cleanWetColours}
+\li in
+\li   {dirtyLaundry, dirtyWhites, dirtyColours,
+\zi     cleanWetWhites, cleanWetColours, cleanLaundry}
 \end{code}
 
 It seems overly excessive to have the state at the \mono{let}-expression (lines
@@ -199,11 +199,11 @@ for the state to evolve from
 
 to
 
-\begin{codebox}
+\begin{code}
  { dirtyLaundry = [],
    dirtyWhites = [A,C,...],
    dirtyColours = [B,D,...] }
-\end{codebox}
+\end{code}
 
 Let us now consider the \var{split} procedure: 
 

@@ -347,7 +347,8 @@ compileTeXemes (
   (TeXCodeBox codebox) :
   tail) = do
     closeParagraph
-    addToOutput "<code><ol>"
+    addListingAnchor
+    addToOutput "<code class='listing'><ol>"
     mapM compileCodeBoxElement codebox
     closeCodeLine
     simpleCloseParagraph
@@ -365,17 +366,7 @@ compileTeXemes (
   (TeXCode code) :
   tail) = do
     closeParagraph
-    context <- getContext
-    let listing = (listingCounter context)
-    let numbers = (joinNumbers (headerStack context)) ++ ('.' : (show listing))
-    setContext $ context { listingCounter = listing + 1 }
-    addManyToOutput ["<a class='margin' id='L.",
-      numbers,
-      "' href='#L.",
-      numbers,
-      "'>Listing ",
-      numbers,
-      "</a>"]
+    addListingAnchor
     addToOutput "<code class='listing'><ol>"
     liftOutput (compileCode code)
     addToOutput "</ol></code>"
@@ -411,6 +402,20 @@ compileTeXemes (
   tail) = do
     compileTeXGroup paragraphs
     compileTeXemes tail
+
+addListingAnchor :: TeX ()
+addListingAnchor = do
+  context <- getContext
+  let listing = (listingCounter context)
+  let numbers = (joinNumbers (headerStack context)) ++ ('.' : (show listing))
+  setContext $ context { listingCounter = listing + 1 }
+  addManyToOutput ["<a class='margin' id='L.",
+    numbers,
+    "' href='#L.",
+    numbers,
+    "'>Listing ",
+    numbers,
+    "</a>"]
 
 addParagraphSpace :: TeX ()
 addParagraphSpace = do
