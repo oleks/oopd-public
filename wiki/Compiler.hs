@@ -535,10 +535,10 @@ writeDefinitionCounter = do
 
 
 compileCodeBoxElement :: TeXCode -> TeX ()
-compileCodeBoxElement TeXCodeZi = do
+compileCodeBoxElement TeXCodeLi = do
   closeCodeLine
   openCodeLine
-compileCodeBoxElement TeXCodeLi = do
+compileCodeBoxElement TeXCodeZi = do
   addToParagraph "\n"
 compileCodeBoxElement (TeXCodeRaw string) = do
   addToParagraph string
