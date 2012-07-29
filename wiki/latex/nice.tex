@@ -135,7 +135,7 @@ context of an expression, we can specify how the state develops throughout the
 \li in
 \li   {dirtyLaundry, dirtyWhites, dirtyColours,
 \zi     cleanWetWhites, cleanWetColours, cleanLaundry}
-\end{code}
+\end{codebox}
 
 It seems overly excessive to have the state at the \mono{let}-expression (lines
 9--10) contain all these ``intermediate'' names, such as \var{dirtyWhites},
@@ -194,16 +194,18 @@ In particular, if we represent baskets and piles as good old lists, we'd like
 for the state to evolve from
 
 \begin{code}
-{ dirtyLaundry = [A,B,C,D,...] }
+{ dirtyLaundry = [A, B, C, D, ...] }
 \end{code}
 
 to
 
-\begin{code}
- { dirtyLaundry = [],
-   dirtyWhites = [A,C,...],
-   dirtyColours = [B,D,...] }
-\end{code}
+\begin{codebox}
+\li {
+\zi   dirtyLaundry = [],
+\zi   dirtyWhites = [A, C, ...],
+\zi   dirtyColours = [B, D, ...]
+\zi }
+\end{codebox}
 
 Let us now consider the \var{split} procedure: 
 
