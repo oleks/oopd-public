@@ -74,7 +74,7 @@ parseCodeBoxRaw = do
     (satisfy Char.isAlphaNum) <|>
     (satisfy (\ char ->
       elem char [
-        ' ', ',', '.', '=', '(', ')', '{', '}', '[',']'
+        ' ', ',', '.', '=', ';', '(', ')', '{', '}', '[',']'
       ])) <|>
     try (do { newline; notFollowedBy (char '\\'); return ' ' })
   return $ TeXCodeRaw raw
