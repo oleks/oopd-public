@@ -11,10 +11,17 @@ data TeXSpecial
   | TeXCloseDoubleQuote
   deriving(Show)
 
+data TeXCode
+  = TeXCodeRaw String
+  | TeXCodeLi
+  | TeXCodeZi
+  deriving(Show)
+
 data TeXeme
   = TeXRaw String
   | TeXSpecial TeXSpecial
   | TeXVerbatim String
+  | TeXCodeBox [TeXCode]
   | TeXCode [String]
   | TeXBegin String
   | TeXEnd String

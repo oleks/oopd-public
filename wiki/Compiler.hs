@@ -118,12 +118,7 @@ closeParagraph = do
   if inParagraph context
   then do
     addManyToOutput ["<p>", (contextParagraph context), "</p>"]
-    context <- getContext
-    setContext context {
-      paragraphLength = 0,
-      contextParagraph = "",
-      contextTeXemes = []
-    }
+    resetParagraphContext
   else return ()
 
 simpleCloseParagraph :: TeX ()
@@ -132,13 +127,17 @@ simpleCloseParagraph = do
   if inParagraph context
   then do
     addToOutput (contextParagraph context)
-    context <- getContext
-    setContext $ context {
-      paragraphLength = 0,
-      contextParagraph = "",
-      contextTeXemes = []
-  }
+    resetParagraphContext
   else return ()
+
+resetParagraphContext :: TeX ()
+resetParagraphContext = do
+  context <- getContext
+  setContext $ context {
+    paragraphLength = 0,
+    contextParagraph = "",
+    contextTeXemes = []
+  }
 
 addToParagraph :: String -> TeX ()
 addToParagraph string = do
@@ -152,8 +151,8 @@ addToParagraph string = do
 inParagraph :: Context -> Bool
 inParagraph context = paragraphLength context > 0
 
-openItem :: TeX ()
-openItem = do
+openListItem :: TeX ()
+openListItem = do
   closeParagraph
   context <- getContext
   if contextItem context
@@ -165,13 +164,39 @@ openItem = do
       contextItem = True
     }
 
-closeItem :: TeX ()
-closeItem = do
+closeListItem :: TeX ()
+closeListItem = do
   closeParagraph
   context <- getContext
   if contextItem context
   then do
     addToOutput "</li>"
+    context <- getContext
+    setContext context {
+      contextItem = False
+    }
+  else return ()
+
+openCodeLine :: TeX ()
+openCodeLine = do
+  simpleCloseParagraph
+  context <- getContext
+  if contextItem context
+  then fail "Item is already open."
+  else do
+    addToOutput "<li><pre>"
+    context <- getContext
+    setContext context {
+      contextItem = True
+    }
+
+closeCodeLine :: TeX ()
+closeCodeLine = do
+  simpleCloseParagraph
+  context <- getContext
+  if contextItem context
+  then do
+    addToOutput "</pre></li>"
     context <- getContext
     setContext context {
       contextItem = False
@@ -232,7 +257,7 @@ compileTeXemes ((TeXBegin name):tail) = do
   }
   compileTeXemes tail
 compileTeXemes ((TeXEnd name):tail) = do
-  closeItem
+  closeListItem
   context <- getContext
   case (environmentStack context) of
     (frame : tail) ->
@@ -266,8 +291,8 @@ compileTeXemes (
 compileTeXemes (
   (TeXCommand "item") :
   tail) = do
-    closeItem
-    openItem
+    closeListItem
+    openListItem
     compileTeXemes tail
 compileTeXemes (
   [TeXCommand "ldots"]) = do
@@ -317,6 +342,16 @@ compileTeXemes (
     addToParagraph "<code>"
     compileTeXGroup paragraphs
     addToParagraph "</code>"
+    compileTeXemes tail
+compileTeXemes (
+  (TeXCodeBox codebox) :
+  tail) = do
+    closeParagraph
+    addToOutput "<code><ol>"
+    mapM compileCodeBoxElement codebox
+    closeCodeLine
+    simpleCloseParagraph
+    addToOutput "</ol></code>"
     compileTeXemes tail
 compileTeXemes (
   (TeXCommand "mono") :
@@ -493,3 +528,12 @@ writeDefinitionCounter = do
     numbers,
     "</a>"]
 
+
+compileCodeBoxElement :: TeXCode -> TeX ()
+compileCodeBoxElement TeXCodeZi = do
+  closeCodeLine
+  openCodeLine
+compileCodeBoxElement TeXCodeLi = do
+  addToParagraph "\n"
+compileCodeBoxElement (TeXCodeRaw string) = do
+  addToParagraph string

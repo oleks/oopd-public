@@ -54,8 +54,30 @@ parseBegin = do
 
 parseCodeBox :: Parser TeXeme
 parseCodeBox = do
-  code <- manyTill parseCodeLine (try $ parseEndSpecial "codebox")
-  return $ TeXCode code
+  code <- manyTill parseCodeBoxElement (try $ parseEndSpecial "codebox")
+  return $ TeXCodeBox code
+
+parseCodeBoxElement :: Parser TeXCode
+parseCodeBoxElement = do
+  optional (char '\n')
+  parseCodeBoxCommand <|> parseCodeBoxRaw
+
+parseCodeBoxCommand :: Parser TeXCode
+parseCodeBoxCommand = do
+  char '\\'
+  do { string "li "; return TeXCodeLi } <|>
+    do { string "zi "; return TeXCodeZi }
+
+parseCodeBoxRaw :: Parser TeXCode
+parseCodeBoxRaw = do
+  raw <- many1 $
+    (satisfy Char.isAlphaNum) <|>
+    (satisfy (\ char ->
+      elem char [
+        ' ', '(', ')'
+      ])) <|>
+    try (do { newline; notFollowedBy (char '\\'); return ' ' })
+  return $ TeXCodeRaw raw
 
 parseCode :: Parser TeXeme
 parseCode = do
