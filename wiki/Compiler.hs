@@ -10,10 +10,6 @@ import Grammar
 import CodeCompiler
 import Html
 
-data State = OrderedList | OrderedItem
-
-type Stack = [State]
-
 data Context
   = Context {
     environmentStack :: [Environment],
