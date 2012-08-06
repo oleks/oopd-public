@@ -1,7 +1,9 @@
 module Html(
   htmlHeader,
   htmlFooter,
-  getTeXSpecialHtml
+  getTeXSpecialHtml,
+  htmlBegin,
+  htmlEnd
 ) where
 
 import qualified Control.Monad
@@ -9,7 +11,7 @@ import qualified Data.List as List
 import qualified Data.Time as Time
 import Data.Time.Format(formatTime)
 import System.Locale(defaultTimeLocale)
-
+import Text.Show(showString)
 
 import Grammar
 
@@ -94,3 +96,17 @@ getTeXSpecialHtml TeXCloseSingleQuote = "&#8217;"
 getTeXSpecialHtml TeXOpenDoubleQuote = "&#8220;"
 getTeXSpecialHtml TeXCloseDoubleQuote = "&#8221;"
 
+htmlTagName :: Environment -> String
+htmlTagName environment =
+  case environment of
+    Enumerate -> "ol"
+    Itemize -> "ul"
+    Definition -> "dfn"
+
+htmlBegin :: Environment -> String
+htmlBegin environment =
+  showString "<" $ showString (htmlTagName environment) ">"
+
+htmlEnd :: Environment -> String
+htmlEnd environment =
+  showString "</" $ showString (htmlTagName environment) ">"

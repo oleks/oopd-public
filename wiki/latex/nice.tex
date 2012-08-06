@@ -131,7 +131,7 @@ context of an expression, we can specify how the state develops throughout the
 \end{codebox}
 
 It seems overly excessive to have the state at the \mono{let}-expression (line
-7) contain all these ``intermediate'' names, such as \var{dirtyWhites},
+7) contain various intermediate names, such as \var{dirtyWhites},
 \var{cleanWetColours}, etc. All we really want in the \mono{let}-expression is
 the \var{cleanLaundry}. What's more, it does not conceptually make sense to be
 able to use the dirty, or wet laundry once the laundry has been washed and
@@ -139,10 +139,12 @@ dried, right? Indeed, we'd like for the state develop in a fashion similar to
 this:
 
 \begin{code}
-{dirtyLaundry}
-{dirtyWhites, dirtyColours}
-{cleanWetWhites, cleanWetColours}
-{cleanDryLaundry}
+let
+  {dirtyLaundry}
+  {dirtyWhites, dirtyColours}
+  {cleanWetWhites, cleanWetColours}
+in
+  {cleanDryLaundry}
 \end{code}
 
 While we could attempt to attain this using nested \mono{let}-blocks or
@@ -153,39 +155,41 @@ simple as our initial specification of the procedure.
 The thing that is getting in the way here is that in the functional paradigm
 we're dealing with \emph{immutable} values. That is, values that can be created
 and destroyed, but not modified. Indeed, if the pile of laundry was a
-\emph{mutable} value, we could simply \emph{sequentially} modify that value
-from a dirty pile to a clean stack. After-all, this resembles what we do with
-the laundry in real life.
+\emph{mutable} value, we could simply step-wise modify that value from a dirty
+pile to a clean stack. After-all, this resembles what we do with the laundry in
+real life.
 
 \begin{definition}
 
-A mutable value, or a ``variable'', is a named entity that can refer to
-different concrete values throughout the lifetime of a program.
+A mutable value is a type of value that can have multiple concrete values
+throughout its lifetime.
 
 \end{definition}
 
-Let us thus focus in on a single statement:
+Let us explore the benfit of mutable values by considering the first
+\mono{let}-definition:
 
 \begin{code}
 dirtyWhites, dirtyColours = split dirtyLaundry
 \end{code}
 
-If we let \var{dirtyLaundry} initially be a basket of mixed dirty laundry,
-we'de like for the \emph{effect} of this statement to be that \var{dirtyWhites}
-becomes a pile of dirty whites, and \var{dirtyColours} becomes a pile of dirty
-colours, while \var{dirtyLaundry} becomes an \emph{empty} basket. That is, we'd
-like for the laundry to be \emph{moved} from the basket to the respective
-piles.
+If we let \var{dirtyLaundry} initially be a basket of mixed dirty laundry, we
+can let the \emph{effect} of this statement be that \var{dirtyWhites} becomes a
+pile of dirty whites, and \var{dirtyColours} becomes a pile of dirty colours,
+while \var{dirtyLaundry} becomes an \emph{empty} basket. That is, we can have
+the laundry \emph{moved} from the basket to the respective piles. Again, this
+resembles what we do in real life.
 
-At this point, it no longer makes sense to represent ``state'' as the mere set
-of names available in the context of an expression. It now also matters which
-concrete value a name refers to in the context of the expression.  Indeed,
-before the laundry is split, \var{dirtyLaundry} is a basket full of dirty
-clothes; after it, it should be an empty basket. If we represent baskets and
-piles as good old lists, we'd like for the state to evolve from
+In the context of mutable values, it no longer makes sense to represent
+``state'' as the mere set of names available in the context of an expression.
+It now also matters which concrete value a name refers to in the context of an
+expression. Indeed, before the laundry is split, \var{dirtyLaundry} is a basket
+full of dirty clothes; after it, it is an empty basket. If we represent baskets
+and piles as good old lists, we can define the effect of the split procedure as
+the change of state from
 
 \begin{codebox}
-\li { dirtyLaundry = [A, B, C, D, ...] }
+\li { dirtyLaundry = [white, colour, white, colour, ...] }
 \end{codebox}
 
 to
@@ -193,12 +197,12 @@ to
 \begin{codebox}
 \li {
 \zi   dirtyLaundry = [],
-\zi   dirtyWhites = [A, C, ...],
-\zi   dirtyColours = [B, D, ...]
+\zi   dirtyWhites = [white, white, ...],
+\zi   dirtyColours = [colour, colour, ...]
 \zi }
 \end{codebox}
 
-in the course of the \var{split} procedure. Let us now specify this procedure:
+Let us now consider the split procedure itself:
 
 \begin{codebox}
 \li instanciate a whites pile;
@@ -222,7 +226,7 @@ After the steps 1--2 our state looks like this:
 
 \begin{codebox}
 \li {
-\zi   dirtyLaundry = [A, B, C, D, ...],
+\zi   dirtyLaundry = [white, colour, white, colour, ...],
 \zi   dirtyWhites = [],
 \zi   dirtyColours = []
 \zi }

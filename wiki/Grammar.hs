@@ -17,14 +17,20 @@ data TeXCode
   | TeXCodeZi
   deriving(Show)
 
+data Environment
+  = Itemize
+  | Enumerate
+  | Definition
+  deriving(Eq, Show)
+
 data TeXeme
   = TeXRaw String
   | TeXSpecial TeXSpecial
   | TeXVerbatim String
   | TeXCodeBox [TeXCode]
   | TeXCode [String]
-  | TeXBegin String
-  | TeXEnd String
+  | TeXBegin Environment
+  | TeXEnd Environment
   | TeXCommand String
   | TeXGroup [Paragraph]
   deriving(Show)

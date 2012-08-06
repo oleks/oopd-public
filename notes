@@ -31,9 +31,6 @@ Til møde med Knud:
 - Hvis ikke der nås et fuldt kompendie, så forsøg at supplere med andet
   materiale.
 
-- Er Ole fortsat med?
-
-
 When introducing the java Hello World, http://thecodelesscode.com/case/14
 
 Tell the students that they are encouraged to use the recently acquired
@@ -46,3 +43,37 @@ Critical Evaluation.
 
 In blocks 1 and 2 we really introduce 3 paradigms rather than 2: the
 functional, imperative and object-oriented.
+
+Array of structures.
+
+
+Heap sort
+
+- provides for an immediate discussion of data representation (arrays)
+
+- provides for a discussion of iterative procedures and action clusters
+
+while heap.size > 0
+
+  min-element = extract-min(heap)
+
+  append(sorted, min-element)
+
+- rather brief, and not too many "steps"
+
+- references as in passing arguments to the functions.
+
+
+while heap.size > 0
+
+  stack <- heap
+  extract-min
+
+  stack <- sorted
+  
+
+
+extract-min
+  heap <- stack
+  ...
+  stack <- min-element

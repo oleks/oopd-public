@@ -20,6 +20,7 @@ parseParagraph = do
   texemes <- many1 parseTeXeme
   return $ TeXemes texemes
 
+
 parseTeXeme :: Parser TeXeme
 parseTeXeme =
   parseCommand <|>
@@ -47,10 +48,12 @@ parseBegin = do
   name <- many1 alphaNum
   char '}'
   case name of
-    "codebox" -> parseCodeBox
-    "code" -> parseCode
-    "verbatim" -> parseVerbatim "verbatim"
-    _ -> return $ TeXBegin name
+    "codebox"     -> parseCodeBox
+    "code"        -> parseCode
+    "verbatim"    -> parseVerbatim "verbatim"
+    _ -> do
+      environment <- parseEnvironment name
+      return $ TeXBegin environment
 
 parseCodeBox :: Parser TeXeme
 parseCodeBox = do
@@ -108,7 +111,16 @@ parseEnd = do
   try $ string "end{"
   name <- many1 alphaNum
   char '}'
-  return $ TeXEnd name
+  environment <- parseEnvironment name
+  return $ TeXEnd environment
+
+parseEnvironment :: String -> Parser Environment
+parseEnvironment name =
+  case name of
+    "enumerate"   -> return Enumerate
+    "itemize"     -> return Itemize
+    "definition"  -> return Definition
+    _ -> fail $ "unknown environment \"" ++ name ++ "\"."
 
 parseGroup :: Parser TeXeme
 parseGroup = do

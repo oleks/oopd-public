@@ -16,7 +16,7 @@ type Stack = [State]
 
 data Context
   = Context {
-    environmentStack :: [String],
+    environmentStack :: [Environment],
     paragraphLength :: Int,
     output :: [String],
     contextParagraph :: String,
@@ -77,8 +77,8 @@ setContext :: Context -> TeX ()
 setContext context = do
   TeX { runTeX = \_ -> ((), context) }
 
-updateContext :: (Context -> Context) -> TeX ()
-updateContext f = do
+modify :: (Context -> Context) -> TeX ()
+modify f = do
   TeX { runTeX = \context -> ((), f context) }
 
 getFromContext :: (Context -> t) -> TeX t
@@ -224,12 +224,12 @@ compileParagraph (TeXemes texemes) = do
   else return ()
 
 suppressSpace :: TeX ()
-suppressSpace = updateContext (\context -> context {
+suppressSpace = modify (\context -> context {
     contextSuppressSpace = True
   })
 
 unsuppressSpace :: TeX ()
-unsuppressSpace = updateContext (\context -> context {
+unsuppressSpace = modify (\context -> context {
     contextSuppressSpace = False
   })
 
@@ -245,32 +245,26 @@ compileTeXemes ((TeXVerbatim text):tail) = do
   closeParagraph
   addManyToOutput ["<pre>", text, "</pre>"]
   compileTeXemes tail
-compileTeXemes ((TeXBegin name):tail) = do
+compileTeXemes ((TeXBegin environment):tail) = do
   closeParagraph
-  case name of
-    "definition" -> writeDefinitionCounter
-    _ -> return ()
-  addToOutput $ fst $ environmentMap Map.! name
-  context <- getContext
-  setContext context {
-    environmentStack = name : (environmentStack context)
-  }
+  writeBegin environment
+  modify (\ context -> context {
+    environmentStack = environment : (environmentStack context)
+  })
   compileTeXemes tail
-compileTeXemes ((TeXEnd name):tail) = do
+compileTeXemes ((TeXEnd environment):tail) = do
   closeListItem
   context <- getContext
   case (environmentStack context) of
     (frame : tail) ->
-      if frame == name
+      if frame == environment
       then do
-        addToOutput $ snd (environmentMap Map.! name)
-        context <- getContext
-        setContext context {
-          environmentStack = tail
-        }
+        addToOutput $ htmlEnd environment
+        modify (\ context ->
+          context{environmentStack = tail
+        })
       else fail "stack underflow 0"
     _ -> fail "stack underflow 1"
-  context <- getContext
   compileTeXemes tail
 compileTeXemes (
   (TeXCommand "chapter") :
@@ -542,3 +536,15 @@ compileCodeBoxElement TeXCodeZi = do
   addToParagraph "\n"
 compileCodeBoxElement (TeXCodeRaw string) = do
   addToParagraph string
+
+writeBegin :: Environment -> TeX ()
+writeBegin environment = do
+  case environment of
+    Definition -> writeDefinitionCounter
+    _ -> return ()
+  addToOutput $ htmlBegin environment
+
+writeEnd :: Environment -> TeX ()
+writeEnd environment = do
+  addToOutput $ htmlEnd environment
+
