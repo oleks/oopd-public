@@ -45,12 +45,6 @@ initialContext
     title = "Untitled"
   }
 
-environmentMap :: Map.Map String (String, String)
-environmentMap = Map.fromList [
-  ("enumerate", ("<ol>", "</ol>")),
-  ("itemize", ("<ul>", "</ul>")),
-  ("definition", ("<dfn>", "</dfn>"))]
-
 data TeX t = TeX {
   runTeX :: Context -> (t, Context)
 }
