@@ -1,5 +1,6 @@
 module String(
-  join
+  join,
+  joinWith
 ) where
 
 import Text.Show(showString)
