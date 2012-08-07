@@ -496,6 +496,9 @@ writeDefinitionAnchor = do
   setContext $ context { definitionCounter = definition + 1 }
   addToOutput $ htmlCounterAnchor DefinitionCounter numbers
 
+{-- TODO: The writeXXXAnchor interfaces are not consistent. writeSectionAnchor
+does not advance the header whereas the rest do. --}
+
 compileCodeBoxElement :: TeXCode -> TeX ()
 compileCodeBoxElement TeXCodeLi = do
   closeCodeLine
