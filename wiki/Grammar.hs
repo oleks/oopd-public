@@ -42,3 +42,9 @@ data Paragraph
 data LaTeX
   = Paragraphs [Paragraph]
   deriving(Show)
+
+data Counter
+  = ListingCounter
+  | DefinitionCounter
+  | SectionCounter
+  deriving(Eq,Show)

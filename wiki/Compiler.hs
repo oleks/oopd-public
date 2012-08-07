@@ -9,6 +9,7 @@ import Text.Show
 import Grammar
 import CodeCompiler
 import Html
+import String
 
 data Context
   = Context {
@@ -262,8 +263,8 @@ compileTeXemes (
   tail) = do
     closeParagraph
     advanceHeader 1
-    numeral <- getHeaderNumeral
-    addManyToOutput ["<h1>", numeral]
+    addToOutput "<h1>"
+    writeSectionAnchor
     compileTeXGroup title
 
     context <- getContext
@@ -331,7 +332,7 @@ compileTeXemes (
   (TeXCodeBox codebox) :
   tail) = do
     closeParagraph
-    addListingAnchor
+    writeListingAnchor
     addToOutput "<code class='listing'><ol>"
     mapM compileCodeBoxElement codebox
     closeCodeLine
@@ -350,7 +351,7 @@ compileTeXemes (
   (TeXCode code) :
   tail) = do
     closeParagraph
-    addListingAnchor
+    writeListingAnchor
     addToOutput "<code class='listing'><ol>"
     liftOutput (compileCode code)
     addToOutput "</ol></code>"
@@ -387,19 +388,6 @@ compileTeXemes (
     compileTeXGroup paragraphs
     compileTeXemes tail
 
-addListingAnchor :: TeX ()
-addListingAnchor = do
-  context <- getContext
-  let listing = (listingCounter context)
-  let numbers = (joinNumbers (headerStack context)) ++ ('.' : (show listing))
-  setContext $ context { listingCounter = listing + 1 }
-  addManyToOutput ["<a class='margin' id='L.",
-    numbers,
-    "' href='#L.",
-    numbers,
-    "'>Listing ",
-    numbers,
-    "</a>"]
 
 addParagraphSpace :: TeX ()
 addParagraphSpace = do
@@ -487,36 +475,26 @@ advanceHeader depth = do
         headerStack = (currentNumber + 1) : tail
       }
 
-getHeaderNumeral :: TeX String
-getHeaderNumeral = do
+writeSectionAnchor :: TeX ()
+writeSectionAnchor = do
   context <- getContext
-  let numbers = joinNumbers (headerStack context)
-  return $
-    showString "<a class='margin' id='S." $
-    showString numbers $
-    showString "'>&sect; " $
-    showString numbers ".&nbsp;</a>"
+  addToOutput $ htmlCounterAnchor SectionCounter (headerStack context)
 
-joinNumbers :: [Int] -> String
-joinNumbers [] = ""
-joinNumbers (number : tail) =
-  List.foldl' (\text i -> showString (show i) text) (show number) tail
+writeListingAnchor :: TeX ()
+writeListingAnchor = do
+  context <- getContext
+  let listing = (listingCounter context)
+  let numbers = (listing : (headerStack context))
+  setContext $ context { listingCounter = listing + 1 }
+  addToOutput $ htmlCounterAnchor ListingCounter numbers
 
-
-writeDefinitionCounter :: TeX ()
-writeDefinitionCounter = do
+writeDefinitionAnchor :: TeX ()
+writeDefinitionAnchor = do
   context <- getContext
   let definition = (definitionCounter context)
-  let numbers = (joinNumbers (headerStack context)) ++ ('.' : (show definition))
+  let numbers = (definition : (headerStack context))
   setContext $ context { definitionCounter = definition + 1 }
-  addManyToOutput ["<a class='margin' id='D.",
-    numbers,
-    "' href='#D.",
-    numbers,
-    "'>Definition ",
-    numbers,
-    "</a>"]
-
+  addToOutput $ htmlCounterAnchor DefinitionCounter numbers
 
 compileCodeBoxElement :: TeXCode -> TeX ()
 compileCodeBoxElement TeXCodeLi = do
@@ -530,7 +508,7 @@ compileCodeBoxElement (TeXCodeRaw string) = do
 writeBegin :: Environment -> TeX ()
 writeBegin environment = do
   case environment of
-    Definition -> writeDefinitionCounter
+    Definition -> writeDefinitionAnchor
     _ -> return ()
   addToOutput $ htmlBegin environment
 

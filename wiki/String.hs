@@ -1,6 +1,7 @@
 module String(
   join,
-  joinWith
+  joinWith,
+  reverseJoinWith
 ) where
 
 import Text.Show(showString)
@@ -63,5 +64,15 @@ joinWith (head:tail) separator = evalReverseState "" $ do
   mapM (\element -> modify (\text ->
     showString separator $ showString element text
     )) tail
+  return text
+
+reverseJoinWith :: [String] -> String -> String
+reverseJoinWith [] _ = ""
+reverseJoinWith (head:tail) separator = evalState "" $ do
+  modifyState (head++)
+  mapM (\element -> modifyState (\text ->
+    showString element $ showString separator text
+    )) tail
+  text <- getState
   return text
 

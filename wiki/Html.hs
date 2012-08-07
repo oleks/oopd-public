@@ -3,45 +3,31 @@ module Html(
   htmlFooter,
   getTeXSpecialHtml,
   htmlBegin,
-  htmlEnd
+  htmlEnd,
+  htmlCounterAnchor
 ) where
 
-import qualified Control.Monad
-import qualified Data.List as List
 import qualified Data.Time as Time
 import Data.Time.Format(formatTime)
 import System.Locale(defaultTimeLocale)
 import Text.Show(showString)
 
 import Grammar
+import String
 
-newtype ReverseState state value =
-  ReverseState {
-    runReverseState :: state -> (value, state)
-  }
+class HtmlAnchor a where
+  idPrefix :: a -> String
+  textPrefix :: a -> String
 
-evalReverseState state function =
-  fst (runReverseState function state)
+instance HtmlAnchor Counter where
 
-instance Monad (ReverseState state) where
-    return value = ReverseState $ (,) value
-    ReverseState runner >>= function =
-      ReverseState $ \s ->
-        let (a,s'') = runner s'
-            (b,s') = runReverseState (function a) s
-        in (b,s'')
+  idPrefix DefinitionCounter = "D"
+  idPrefix ListingCounter = "L"
+  idPrefix SectionCounter = "S"
 
-get =
-  ReverseState $ \state -> (state, state)
-modify function =
-  ReverseState $ \state -> ((), function state)
-put = modify . const
-
-join :: [String] -> String
-join strings = evalReverseState "" $ do
-    text <- get
-    mapM (\string -> modify (string++)) strings
-    return text
+  textPrefix DefinitionCounter = "Definition"
+  textPrefix ListingCounter = "Listing"
+  textPrefix SectionCounter = "&sect;"
 
 htmlHeader :: String -> String
 htmlHeader htmlTitle =
@@ -70,7 +56,7 @@ htmlFooter utcTime =
     "<time datetime='",
     formatTime defaultTimeLocale "%Y-%m-%d" utcTime,
     "'>",
-    formatTime defaultTimeLocale "%Y %b. %d" utcTime,
+    formatTime defaultTimeLocale "%B %d, %Y" utcTime,
     "</span>",
     "</address>",
     "</footer></body></html>"
@@ -87,6 +73,31 @@ externalLink htmlClass href text =
     text,
     "</a>"
   ]
+
+htmlCounterAnchor :: Counter -> [Int] -> String
+htmlCounterAnchor counter numberStack =
+  let
+    numbers = reverseJoinWith (map show numberStack) "."
+    textNumbers =
+      case counter of
+        SectionCounter ->
+          (showString numbers ".&nbsp;")
+        _ -> numbers
+  in
+    htmlCounterAnchorAux counter numbers textNumbers
+
+htmlCounterAnchorAux :: Counter -> String -> String -> String
+htmlCounterAnchorAux counter idNumbers textNumbers =
+  let
+    idText = showString (idPrefix counter) ('.':idNumbers)
+    textText = showString (textPrefix counter) (' ':textNumbers)
+  in join ["<a class='margin' id='",
+    idText,
+    "' href='#",
+    idText,
+    "'>",
+    textText,
+    "</a>"]
 
 getTeXSpecialHtml :: TeXSpecial -> String
 getTeXSpecialHtml TeXEmDash = "&mdash;"
