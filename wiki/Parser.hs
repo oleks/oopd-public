@@ -63,13 +63,19 @@ parseCodeBox = do
 parseCodeBoxElement :: Parser TeXCode
 parseCodeBoxElement = do
   optional (char '\n')
-  parseCodeBoxCommand <|> parseCodeBoxRaw
+  choice [parseCodeBoxSpecial, parseCodeBoxCommand, parseCodeBoxRaw]
+
+parseCodeBoxSpecial :: Parser TeXCode
+parseCodeBoxSpecial = choice [
+  do { char '<'; return TeXCodeLt },
+  do { char '>'; return TeXCodeGt }]
 
 parseCodeBoxCommand :: Parser TeXCode
 parseCodeBoxCommand = do
   char '\\'
-  do { string "li "; return TeXCodeLi } <|>
-    do { string "zi "; return TeXCodeZi }
+  choice [
+    do { string "li "; return TeXCodeLi },
+    do { string "zi "; return TeXCodeZi }]
 
 parseCodeBoxRaw :: Parser TeXCode
 parseCodeBoxRaw = do
@@ -77,7 +83,7 @@ parseCodeBoxRaw = do
     (satisfy Char.isAlphaNum) <|>
     (satisfy (\ char ->
       elem char [
-        ' ', ',', '.', '=', ';', '(', ')', '{', '}', '[',']'
+        ' ', ',', '.', '-', '=', ';', '(', ')', '{', '}', '[',']'
       ])) <|>
     try (do { newline; notFollowedBy (char '\\'); return ' ' })
   return $ TeXCodeRaw raw
@@ -150,8 +156,12 @@ parseRaw = do
         ',',
         ':',
         ';',
+        '=',
         '(',
-        ')'
+        ')',
+        '[',
+        ']',
+        '/'
       ])) <|>
     do { many1 $ char ' '; return ' ' } <|>
     try (do { char '-'; notFollowedBy (char '-'); return '-' }) <|>
@@ -171,5 +181,7 @@ parseTeXSpecial =
       parse "``"  TeXOpenDoubleQuote <|>
       parse "''"  TeXCloseDoubleQuote <|>
       parse "`"   TeXOpenSingleQuote <|>
-      parse "'"   TeXCloseSingleQuote
+      parse "'"   TeXCloseSingleQuote <|>
+      parse "<"   TeXLt <|>
+      parse ">"   TeXGt
     return $ TeXSpecial texSpecial

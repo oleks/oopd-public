@@ -258,6 +258,18 @@ compileTeXemes ((TeXEnd environment):tail) = do
     _ -> fail "stack underflow 1"
   compileTeXemes tail
 compileTeXemes (
+  (TeXCommand "assignment") :
+  (TeXGroup title) :
+  tail) = do
+    closeParagraph
+    advanceHeader 2
+    addToOutput "<h2>"
+    writeSectionAnchor
+    compileTeXGroup title
+    simpleCloseParagraph
+    addToOutput "</h2>"
+    compileTeXemes tail
+compileTeXemes (
   (TeXCommand "chapter") :
   (TeXGroup title) :
   tail) = do
@@ -364,6 +376,19 @@ compileTeXemes (
     addToParagraph "<a target='_blank' href='http://en.wikipedia.org/wiki/"
     suppressSpace
     compileTeXGroup page
+    addToParagraph "'>"
+    suppressSpace
+    compileTeXGroup text
+    addToParagraph "</a>"
+    compileTeXemes tail
+compileTeXemes (
+  (TeXCommand "link") :
+  (TeXGroup text) :
+  (TeXGroup link) :
+  tail) = do
+    addToParagraph "<a target='_blank' href='"
+    suppressSpace
+    compileTeXGroup link
     addToParagraph "'>"
     suppressSpace
     compileTeXGroup text
@@ -500,11 +525,18 @@ writeDefinitionAnchor = do
 does not advance the header whereas the rest do. --}
 
 compileCodeBoxElement :: TeXCode -> TeX ()
+compileCodeBoxElement TeXCodeLt = do
+  addToParagraph "&lt;"
+compileCodeBoxElement TeXCodeGt = do
+  addToParagraph "&gt;"
 compileCodeBoxElement TeXCodeLi = do
   closeCodeLine
   openCodeLine
 compileCodeBoxElement TeXCodeZi = do
-  addToParagraph "\n"
+  context <- getContext
+  if inParagraph context
+  then addToParagraph "</br>"
+  else return ()
 compileCodeBoxElement (TeXCodeRaw string) = do
   addToParagraph string
 

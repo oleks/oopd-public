@@ -100,6 +100,8 @@ htmlCounterAnchorAux counter idNumbers textNumbers =
     "</a>"]
 
 getTeXSpecialHtml :: TeXSpecial -> String
+getTeXSpecialHtml TeXLt = "&lt;"
+getTeXSpecialHtml TeXGt = "&gt;"
 getTeXSpecialHtml TeXEmDash = "&mdash;"
 getTeXSpecialHtml TeXEnDash = "&ndash;"
 getTeXSpecialHtml TeXOpenSingleQuote = "&#8216;"

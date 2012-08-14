@@ -5,6 +5,8 @@ import qualified Data.List as List
 data TeXSpecial
   = TeXEmDash
   | TeXEnDash
+  | TeXLt
+  | TeXGt
   | TeXOpenSingleQuote
   | TeXCloseSingleQuote
   | TeXOpenDoubleQuote
@@ -13,6 +15,8 @@ data TeXSpecial
 
 data TeXCode
   = TeXCodeRaw String
+  | TeXCodeLt
+  | TeXCodeGt
   | TeXCodeLi
   | TeXCodeZi
   deriving(Show)
