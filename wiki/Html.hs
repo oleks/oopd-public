@@ -10,7 +10,6 @@ module Html(
 import qualified Data.Time as Time
 import Data.Time.Format(formatTime)
 import System.Locale(defaultTimeLocale)
-import Data.List(intercalate)
 
 import Grammar
 
@@ -76,11 +75,10 @@ externalLink htmlClass href text =
 htmlCounterAnchor :: Counter -> [Int] -> String
 htmlCounterAnchor counter numberStack =
   let
-    numbers = intercalate " " (reverse (map show numberStack))
+    numbers = unwords (reverse (map show numberStack))
     textNumbers =
       case counter of
-        SectionCounter ->
-          (showString numbers ".&nbsp;")
+        SectionCounter -> numbers ++ ".&nbsp;"
         _ -> numbers
   in
     htmlCounterAnchorAux counter numbers textNumbers
@@ -88,8 +86,8 @@ htmlCounterAnchor counter numberStack =
 htmlCounterAnchorAux :: Counter -> String -> String -> String
 htmlCounterAnchorAux counter idNumbers textNumbers =
   let
-    idText = showString (idPrefix counter) ('.':idNumbers)
-    textText = showString (textPrefix counter) (' ':textNumbers)
+    idText = idPrefix counter ++ '.' : idNumbers
+    textText = textPrefix counter ++ ' ' : textNumbers
   in concat ["<a class='margin' id='",
     idText,
     "' href='#",
@@ -117,8 +115,8 @@ htmlTagName environment =
 
 htmlBegin :: Environment -> String
 htmlBegin environment =
-  showString "<" $ showString (htmlTagName environment) ">"
+  "<" ++ htmlTagName environment ++ ">"
 
 htmlEnd :: Environment -> String
 htmlEnd environment =
-  showString "</" $ showString (htmlTagName environment) ">"
+  "</" ++ htmlTagName environment ++ ">"
