@@ -3,8 +3,6 @@ module Parser where
 import Text.Parsec
 import Text.Parsec.Text
 import qualified Data.Char as Char
-import qualified Data.List as List
-import qualified System.FilePath as FilePath
 
 import Grammar
 
@@ -16,10 +14,19 @@ parseString = do
 
 parseParagraph :: Parser Paragraph
 parseParagraph = do
-  many newline
+  _ <- many newline
   texemes <- many1 parseTeXeme
   return $ TeXemes texemes
 
+ensure :: Parser a -> Parser ()
+ensure p = do
+  _ <- p
+  return ()
+
+attempt :: Parser a -> Parser ()
+attempt p = do
+  _ <- try p
+  return ()
 
 parseTeXeme :: Parser TeXeme
 parseTeXeme =
@@ -31,13 +38,13 @@ parseTeXeme =
 
 parseComment :: Parser TeXeme
 parseComment = do
-  char '%'
+  ensure $ char '%'
   comment <- manyTill anyChar newline
   return $ TeXComment comment
 
 parseCommand :: Parser TeXeme
 parseCommand = do
-  char '\\'
+  ensure $ char '\\'
   parseBegin <|>
     parseEnd <|>
     parseSpace <|>
@@ -51,9 +58,9 @@ parseGenericCommand = do
 
 parseBegin :: Parser TeXeme
 parseBegin = do
-  try $ string "begin{"
+  attempt $ string "begin{"
   name <- many1 alphaNum
-  char '}'
+  ensure $ char '}'
   case name of
     "codebox"     -> parseCodeBox
     "code"        -> parseCode
@@ -74,25 +81,22 @@ parseCodeBoxElement = do
 
 parseCodeBoxSpecial :: Parser TeXCode
 parseCodeBoxSpecial = choice [
-  do { char '<'; return TeXCodeLt },
-  do { char '>'; return TeXCodeGt }]
+  do { ensure $ char '<'; return TeXCodeLt },
+  do { ensure $ char '>'; return TeXCodeGt }]
 
 parseCodeBoxCommand :: Parser TeXCode
 parseCodeBoxCommand = do
-  char '\\'
+  ensure $ char '\\'
   choice [
-    do { string "li "; return TeXCodeLi },
-    do { string "zi "; return TeXCodeZi }]
+    do { ensure $ string "li "; return TeXCodeLi },
+    do { ensure $ string "zi "; return TeXCodeZi }]
 
 parseCodeBoxRaw :: Parser TeXCode
 parseCodeBoxRaw = do
   raw <- many1 $
-    (satisfy Char.isAlphaNum) <|>
-    (satisfy (\ char ->
-      elem char [
-        ' ', ',', '.', '-', '=', ';', '(', ')', '{', '}', '[',']'
-      ])) <|>
-    try (do { newline; notFollowedBy (char '\\'); return ' ' })
+    satisfy Char.isAlphaNum <|>
+    satisfy (`elem` " ,.-=;(){}[]") <|>
+    try (do { ensure newline; notFollowedBy (char '\\'); return ' ' })
   return $ TeXCodeRaw raw
 
 parseCode :: Parser TeXeme
@@ -114,16 +118,16 @@ parseVerbatim name = do
 parseEndSpecial :: String -> Parser ()
 parseEndSpecial name = do
   optional (char '\n')
-  string "\\end{"
-  string name
-  char '}'
+  ensure $ string "\\end{"
+  ensure $ string name
+  ensure $ char '}'
   return ()
 
 parseEnd :: Parser TeXeme
 parseEnd = do
-  try $ string "end{"
+  attempt $ string "end{"
   name <- many1 alphaNum
-  char '}'
+  ensure $ char '}'
   environment <- parseEnvironment name
   return $ TeXEnd environment
 
@@ -137,58 +141,41 @@ parseEnvironment name =
 
 parseGroup :: Parser TeXeme
 parseGroup = do
-  char '{'
+  ensure $ char '{'
   paragraphs <- many parseParagraph
-  char '}'
+  ensure $ char '}'
   return $ TeXGroup paragraphs
 
 parseSpace :: Parser TeXeme
 parseSpace = do
-  char ' '
+  ensure $ char ' '
   return $ TeXRaw " "
 
 parseRaw :: Parser TeXeme
 parseRaw = do
   raw <- many1 $
-    (satisfy Char.isAlphaNum) <|>
-    (satisfy (\ char ->
-      elem char [
-        'ø','å','æ','Ø','Å','Æ'
-      ])) <|>
-    (satisfy (\ char ->
-      elem char [
-        '.',
-        '!',
-        '?',
-        ',',
-        ':',
-        ';',
-        '=',
-        '(',
-        ')',
-        '[',
-        ']',
-        '/'
-      ])) <|>
-    do { many1 $ char ' '; return ' ' } <|>
-    try (do { char '-'; notFollowedBy (char '-'); return '-' }) <|>
-    try (do { newline; notFollowedBy newline; return ' ' })
+    satisfy Char.isAlphaNum <|>
+    satisfy (`elem` "æøåÆØÅ") <|>
+    satisfy (`elem` ".!?,:;=()[]/") <|>
+    do { ensure $ many1 $ char ' '; return ' ' } <|>
+    try (do { ensure $ char '-'; notFollowedBy (char '-'); return '-' }) <|>
+    try (do { ensure newline; notFollowedBy newline; return ' ' })
   return $ TeXRaw raw
 
 parseTeXSpecial :: Parser TeXeme
 parseTeXSpecial =
   let
-    parse = \ text constructor -> do
-      try $ string text
+    parse' text constructor = do
+      try $ ensure $ string text
       return constructor
   in do
     texSpecial <-
-      parse "---" TeXEmDash <|>
-      parse "--"  TeXEnDash <|>
-      parse "``"  TeXOpenDoubleQuote <|>
-      parse "''"  TeXCloseDoubleQuote <|>
-      parse "`"   TeXOpenSingleQuote <|>
-      parse "'"   TeXCloseSingleQuote <|>
-      parse "<"   TeXLt <|>
-      parse ">"   TeXGt
+      parse' "---" TeXEmDash <|>
+      parse' "--"  TeXEnDash <|>
+      parse' "``"  TeXOpenDoubleQuote <|>
+      parse' "''"  TeXCloseDoubleQuote <|>
+      parse' "`"   TeXOpenSingleQuote <|>
+      parse' "'"   TeXCloseSingleQuote <|>
+      parse' "<"   TeXLt <|>
+      parse' ">"   TeXGt
     return $ TeXSpecial texSpecial
