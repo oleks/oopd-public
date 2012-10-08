@@ -77,3 +77,57 @@ extract-min
   heap <- stack
   ...
   stack <- min-element
+
+Uge 1:
+
+Introduktion til imperativt programmering for dem der i forrige blok havde
+kodet SML. De andres forudsætning er Python, og gennemgangen er derfor ikke
+nødvendig. Vaskemaskine.
+
+In imperative programming we view a computer as a state-machine.
+
+Tilstandsmaskine.
+
+Et CPU er en enhed med et endeligt antal instruktioner. Vi kan sekvensere disse
+instruktioner til at opnå resultater vi ellers ikke ville kunne opnå med et
+enkelt instruktion fra enhedens ordbog. 
+
+Vi kan endvidere hoppe arbitrært mellem instruktionerne, hvilket tillader os at
+skrive programmer til at løse arbitrært store problemmer (givet et arbitrært
+mængde af tid).
+
+Vi har også fundet ud af at mange problemmer (der ikke kan løses ved et enkelt
+instruktion) kan genopstå mange steder i vores applikation. Det er spild af tid
+og ressourcer, for ikke at nævne den ekstreme menneskelige fejlfaktor at
+kopiere kodesekvens fra et sted til et andet. Derudover, hvad gør vi hvis vi
+finder ud af at vores løsning ikke var korrekt oprindeligt, og vi må finde ALLE
+steder hvor kodesekvensen anvendes og ændre koden. Dette er ekstremt
+fejlbehæftet.
+
+Derfor har man fundet på funktioner. Man tillader et bestemt kodesekvens i
+programmet blive brugt mange forskellige steder. Men en funktion kunne have
+brug for nogle argumenter. F.eks. vil potensfunktionen bruge
+
+Referencer?
+
+Introduktion til Go.
+
+Programmering med strukturer
+
+Uge 2:
+
+Hob sortering for alle som indledende eksempel til data strukturer og arrays?
+
+Hægtede lister, dynamiske arrays.
+
+Uge 3:
+
+Introduktion til JVM og overgang til Java.
+
+Nedarvning og polimorfi ved nedarvning.
+
+Uge 4:
+
+Abstrakte klasser, interfaces, serialisering.
+
+Generiske

@@ -1,7 +1,5 @@
 module Grammar where
 
-import qualified Data.List as List
-
 data TeXSpecial
   = TeXEmDash
   | TeXEnDash
@@ -37,6 +35,7 @@ data TeXeme
   | TeXEnd Environment
   | TeXCommand String
   | TeXGroup [Paragraph]
+  | TeXComment String
   deriving(Show)
 
 data Paragraph

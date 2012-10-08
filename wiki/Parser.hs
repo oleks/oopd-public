@@ -26,7 +26,14 @@ parseTeXeme =
   parseCommand <|>
   parseGroup <|>
   parseRaw <|>
-  parseTeXSpecial
+  parseTeXSpecial <|>
+  parseComment
+
+parseComment :: Parser TeXeme
+parseComment = do
+  char '%'
+  comment <- manyTill anyChar newline
+  return $ TeXComment comment
 
 parseCommand :: Parser TeXeme
 parseCommand = do

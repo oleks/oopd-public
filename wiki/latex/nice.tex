@@ -19,10 +19,11 @@ looking like this:
 \end{code}
 
 While comprehensible, this does not read very well. Most languages we're used
-to, read left-to-right, top-to-bottom. Here, the flow of the program is
-expressed right-to-left, and there is no notion of top-down descent at all. If
-anything, there's a notion of bottom-up ascent, if we for instance, lay out the
-program like this:
+to, i.e. \wikipedia{Indo-euoropean}{Indo-European} languages, read
+left-to-right, top-to-bottom. Here, the flow of the program is expressed
+right-to-left, and there is no notion of top-down descent at all. If anything,
+there's a notion of bottom-up ascent, if we for instance, lay out the program
+like this:
 
 \begin{codebox}
 \li (stack
@@ -31,14 +32,18 @@ program like this:
 \zi       (split laundry))))
 \end{codebox}
 
-So we ``stack the dried, washed and split laundry''? This reads like we're
-putting the cart before the horse. Some tasks, such as doing the laundry,
-cooking a meal, writing a program, are inherently sequential, i.e. they are
-done by performing a sequence of more basic tasks.  Functional programming
-languages can be \explain{syntactically}{A programming language has syntactic
-rules defining the valid positioning of symbols. In this case, the syntactic
-rule is that the name precedes the arguments in a function call.} unfit for
-writing programs to perform such tasks.
+So we ``stack the dried and washed laundry''? This reads like we're putting the
+cart before the horse, and that we're trying to say too much in one breath.
+Some tasks, such as doing the laundry or cooking a meal, are inherently
+sequential, i.e. they are done by performing a sequence of more basic tasks,
+sometimes quite a lengthy sequence.  Functional programming languages can be
+\explain{syntactically}{A programming language has syntactic rules defining the
+valid positioning of symbols. In this case, the syntactic rules are that the
+name precedes the arguments in a function call, and that the body of a function
+is a single expression.} unfit for writing programs to perform such tasks
+\emph{well}.
+
+% TODO: the segway is gone.
 
 We will develop the notion of a \emph{well-written program} throughout these
 lecture notes, but we begin with the following definition:
@@ -54,6 +59,8 @@ Naturally, not any old programmer will do, but someone with relative knowledge
 of the problem domain, and programming experience comparable, or superceeding
 yours, should be able to comprehend and evaluate your programs. The intent is
 to facilitate the development of peer-reviewed programs.
+
+% TODO: Perhaps continue frome here?
 
 We were also somewhat \emph{declarative} when we wrote the functional program.
 For instance, we've left out the fact that we should wash whites before we wash
@@ -75,7 +82,7 @@ let
   (dirtyWhites, dirtyColours) = split dirtyLaundry
   cleanWetWhites = wash dirtyWhites
   cleanWetColours = wash dirtyColours
-  cleanLaundry = dry (cleanWetWhites, cleanWetColours)
+  cleanLaundry = dry (append cleanWetWhites cleanWetColours)
 in
   stack cleanLaundry
 \end{code}

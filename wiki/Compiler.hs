@@ -412,7 +412,10 @@ compileTeXemes (
   tail) = do
     compileTeXGroup paragraphs
     compileTeXemes tail
-
+compileTeXemes (
+  (TeXComment _) :
+  tail) = do
+    compileTeXemes tail
 
 addParagraphSpace :: TeX ()
 addParagraphSpace = do

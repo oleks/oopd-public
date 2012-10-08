@@ -4,13 +4,14 @@ module String(
   reverseJoinWith
 ) where
 
-import Text.Show(showString)
+import Data.List(intercalate)
 
 newtype ReverseState state value =
   ReverseState {
     runReverseState :: state -> (value, state)
   }
 
+evalReverseState :: b -> ReverseState b a -> a
 evalReverseState state function =
   fst (runReverseState function state)
 
@@ -29,6 +30,7 @@ newtype State state value =
     runState :: state -> (value, state)
   }
 
+evalState :: b -> State b a -> a
 evalState state function =
   fst (runState function state)
 
@@ -42,37 +44,31 @@ instance Monad (State state) where
       in
         (newValue, newState)
 
+get :: ReverseState value value
 get = ReverseState $ \state -> (state, state)
-modify function = ReverseState $ \state -> ((), function state)
-put = modify . const
 
+modify :: (state -> state) -> ReverseState state ()
+modify function = ReverseState $ \state -> ((), function state)
+
+getState :: State value value
 getState = State $ \state -> (state, state)
+
+modifyState :: (state -> state) -> State state ()
 modifyState function = State $ \state -> ((), function state)
-putState = modify . const
 
 join :: [String] -> String
-join strings = evalReverseState "" $ do
-  text <- get
-  mapM (\string -> modify (string++)) strings
-  return text
+join = concat
 
-joinWith :: [String] -> String -> String
-joinWith [] _ = ""
-joinWith (head:tail) separator = evalReverseState "" $ do
-  text <- get
-  modify (head++)
-  mapM (\element -> modify (\text ->
-    showString separator $ showString element text
-    )) tail
-  return text
+joinWith :: String -> [String] -> String
+joinWith = intercalate
 
 reverseJoinWith :: [String] -> String -> String
 reverseJoinWith [] _ = ""
-reverseJoinWith (head:tail) separator = evalState "" $ do
-  modifyState (head++)
-  mapM (\element -> modifyState (\text ->
+reverseJoinWith (t : ts) separator = evalState "" $ do
+  modifyState (t++)
+  _ <- mapM (\element -> modifyState (\text ->
     showString element $ showString separator text
-    )) tail
-  text <- getState
-  return text
+    )) ts
+  txt <- getState
+  return txt
 

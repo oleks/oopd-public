@@ -10,10 +10,9 @@ module Html(
 import qualified Data.Time as Time
 import Data.Time.Format(formatTime)
 import System.Locale(defaultTimeLocale)
-import Text.Show(showString)
+import Data.List(intercalate)
 
 import Grammar
-import String
 
 class HtmlAnchor a where
   idPrefix :: a -> String
@@ -31,7 +30,7 @@ instance HtmlAnchor Counter where
 
 htmlHeader :: String -> String
 htmlHeader htmlTitle =
-  join [
+  concat [
     "<!DOCTYPE html>",
     "<html lang='en'>",
     "<head>",
@@ -44,7 +43,7 @@ htmlHeader htmlTitle =
 
 htmlFooter :: Time.UTCTime -> String
 htmlFooter utcTime =
-  join [
+  concat [
     "</article><footer>",
     "<address>",
     "<div>",
@@ -64,7 +63,7 @@ htmlFooter utcTime =
 
 externalLink :: String -> String -> String -> String
 externalLink htmlClass href text =
-  join [
+  concat [
     "<a class='",
     htmlClass,
     "' href='",
@@ -77,7 +76,7 @@ externalLink htmlClass href text =
 htmlCounterAnchor :: Counter -> [Int] -> String
 htmlCounterAnchor counter numberStack =
   let
-    numbers = reverseJoinWith (map show numberStack) "."
+    numbers = intercalate " " (reverse (map show numberStack))
     textNumbers =
       case counter of
         SectionCounter ->
@@ -91,7 +90,7 @@ htmlCounterAnchorAux counter idNumbers textNumbers =
   let
     idText = showString (idPrefix counter) ('.':idNumbers)
     textText = showString (textPrefix counter) (' ':textNumbers)
-  in join ["<a class='margin' id='",
+  in concat ["<a class='margin' id='",
     idText,
     "' href='#",
     idText,
