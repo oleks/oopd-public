@@ -1,15 +1,11 @@
 module Compiler(compile) where
 
-import qualified Data.List as List
-import qualified Data.Map as Map
-import qualified Data.Foldable as Foldable
-import qualified Data.Time as Time
-import Text.Show
+import Data.List(foldl')
+import Data.Time(UTCTime)
 
 import Grammar
 import CodeCompiler
 import Html
-import String
 
 data Context
   = Context {
@@ -72,12 +68,7 @@ modify :: (Context -> Context) -> TeX ()
 modify f = do
   TeX { runTeX = \context -> ((), f context) }
 
-getFromContext :: (Context -> t) -> TeX t
-getFromContext f = do
-  context <- getContext
-  return $ f context
-
-compile :: Time.UTCTime -> LaTeX -> String
+compile :: UTCTime -> LaTeX -> String
 compile utcTime latex =
   let
     (_, context) = (runTeX (compileLaTeX latex)) initialContext
@@ -85,12 +76,12 @@ compile utcTime latex =
     footer = htmlFooter utcTime
   in
     showString header $
-    showString (List.foldl' (\text i -> showString i text) "" (output context)) $
+    showString (foldl' (\text i -> showString i text) "" (output context)) $
     footer
 
 compileLaTeX :: LaTeX -> TeX ()
 compileLaTeX (Paragraphs paragraphs) = do
-  mapM compileParagraph paragraphs
+  mapM_ compileParagraph paragraphs
   return ()
 
 openParagraph :: [TeXeme] -> TeX ()
@@ -150,8 +141,8 @@ openListItem = do
   then fail "Item is already open."
   else do
     addToOutput "<li>"
-    context <- getContext
-    setContext context {
+    context2 <- getContext
+    setContext context2 {
       contextItem = True
     }
 
@@ -162,8 +153,8 @@ closeListItem = do
   if contextItem context
   then do
     addToOutput "</li>"
-    context <- getContext
-    setContext context {
+    context2 <- getContext
+    setContext context2 {
       contextItem = False
     }
   else return ()
@@ -176,8 +167,8 @@ openCodeLine = do
   then fail "Item is already open."
   else do
     addToOutput "<li><pre>"
-    context <- getContext
-    setContext context {
+    context2 <- getContext
+    setContext context2 {
       contextItem = True
     }
 
@@ -188,8 +179,8 @@ closeCodeLine = do
   if contextItem context
   then do
     addToOutput "</pre></li>"
-    context <- getContext
-    setContext context {
+    context2 <- getContext
+    setContext context2 {
       contextItem = False
     }
   else return ()
@@ -219,160 +210,154 @@ suppressSpace = modify (\context -> context {
     contextSuppressSpace = True
   })
 
-unsuppressSpace :: TeX ()
-unsuppressSpace = modify (\context -> context {
-    contextSuppressSpace = False
-  })
-
 compileTeXemes :: [TeXeme] -> TeX ()
 compileTeXemes [] = return ()
-compileTeXemes ((TeXRaw text):tail) = do
-  case (List.length text) of
+compileTeXemes ((TeXRaw text):ts) = do
+  case (length text) of
     0 -> return ()
     _ -> do
       addToParagraph text
-  compileTeXemes tail
-compileTeXemes ((TeXVerbatim text):tail) = do
+  compileTeXemes ts
+compileTeXemes ((TeXVerbatim text):ts) = do
   closeParagraph
   addManyToOutput ["<pre>", text, "</pre>"]
-  compileTeXemes tail
-compileTeXemes ((TeXBegin environment):tail) = do
+  compileTeXemes ts
+compileTeXemes ((TeXBegin environment):ts) = do
   closeParagraph
   writeBegin environment
   modify (\ context -> context {
     environmentStack = environment : (environmentStack context)
   })
-  compileTeXemes tail
-compileTeXemes ((TeXEnd environment):tail) = do
+  compileTeXemes ts
+compileTeXemes ((TeXEnd environment):ts) = do
   closeListItem
   context <- getContext
   case (environmentStack context) of
-    (frame : tail) ->
+    (frame : frames) ->
       if frame == environment
       then do
         addToOutput $ htmlEnd environment
-        modify (\ context ->
-          context{environmentStack = tail
-        })
+        modify (\ context2 ->
+          context2 { environmentStack = frames })
       else fail "stack underflow 0"
     _ -> fail "stack underflow 1"
-  compileTeXemes tail
+  compileTeXemes ts
 compileTeXemes (
   (TeXCommand "assignment") :
-  (TeXGroup title) :
-  tail) = do
+  (TeXGroup ttl) :
+  ts) = do
     closeParagraph
     advanceHeader 2
     addToOutput "<h2>"
     writeSectionAnchor
-    compileTeXGroup title
+    compileTeXGroup ttl
     simpleCloseParagraph
     addToOutput "</h2>"
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   (TeXCommand "chapter") :
-  (TeXGroup title) :
-  tail) = do
+  (TeXGroup ttl) :
+  ts) = do
     closeParagraph
     advanceHeader 1
     addToOutput "<h1>"
     writeSectionAnchor
-    compileTeXGroup title
+    compileTeXGroup ttl
 
     context <- getContext
     setContext context { title = contextParagraph context }
 
     simpleCloseParagraph
     addToOutput "</h1>"
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   (TeXCommand "item") :
-  tail) = do
+  ts) = do
     closeListItem
     openListItem
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   [TeXCommand "ldots"]) = do
     addToParagraph "&hellip;"
     closeParagraph
 compileTeXemes (
   (TeXCommand "ldots") :
-  tail) = do
+  ts) = do
     addToParagraph "&hellip;"
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   TeXSpecial texSpecial :
-  tail) = do
+  ts) = do
     addToParagraph $ getTeXSpecialHtml texSpecial
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   (TeXCommand "bf") :
-  tail) = do
+  ts) = do
     addToGroupStack "b"
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   (TeXCommand "it") :
-  tail) = do
+  ts) = do
     addToGroupStack "i"
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   (TeXCommand "emph") :
   (TeXGroup paragraphs) :
-  tail) = do
+  ts) = do
     addToParagraph "<em>"
     suppressSpace
     compileTeXGroup paragraphs
     addToParagraph "</em>"
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   (TeXCommand "var") :
   (TeXGroup paragraphs) :
-  tail) = do
+  ts) = do
     addToParagraph "<var>"
     compileTeXGroup paragraphs
     addToParagraph "</var>"
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   (TeXCommand "code") :
   (TeXGroup paragraphs) :
-  tail) = do
+  ts) = do
     addToParagraph "<code>"
     compileTeXGroup paragraphs
     addToParagraph "</code>"
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   (TeXCodeBox codebox) :
-  tail) = do
+  ts) = do
     closeParagraph
     writeListingAnchor
     addToOutput "<code class='listing'><ol>"
-    mapM compileCodeBoxElement codebox
+    mapM_ compileCodeBoxElement codebox
     closeCodeLine
     simpleCloseParagraph
     addToOutput "</ol></code>"
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   (TeXCommand "mono") :
   (TeXGroup paragraphs) :
-  tail) = do
+  ts) = do
     addToParagraph "<tt>"
     compileTeXGroup paragraphs
     addToParagraph "</tt>"
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   (TeXCode code) :
-  tail) = do
+  ts) = do
     closeParagraph
     writeListingAnchor
     addToOutput "<code class='listing'><ol>"
     liftOutput (compileCode code)
     addToOutput "</ol></code>"
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   (TeXCommand "wikipedia") :
   (TeXGroup page) :
   (TeXGroup text) :
-  tail) = do
+  ts) = do
     addToParagraph "<a target='_blank' href='http://en.wikipedia.org/wiki/"
     suppressSpace
     compileTeXGroup page
@@ -380,12 +365,12 @@ compileTeXemes (
     suppressSpace
     compileTeXGroup text
     addToParagraph "</a>"
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   (TeXCommand "link") :
   (TeXGroup text) :
   (TeXGroup link) :
-  tail) = do
+  ts) = do
     addToParagraph "<a target='_blank' href='"
     suppressSpace
     compileTeXGroup link
@@ -393,12 +378,12 @@ compileTeXemes (
     suppressSpace
     compileTeXGroup text
     addToParagraph "</a>"
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   (TeXCommand "explain") :
   (TeXGroup text) :
   (TeXGroup explanation) :
-  tail) = do
+  ts) = do
     addToParagraph "<span class='tooltip' title='"
     suppressSpace
     compileTeXGroup explanation
@@ -406,39 +391,26 @@ compileTeXemes (
     suppressSpace
     compileTeXGroup text
     addToParagraph "</span>"
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   (TeXGroup paragraphs) :
-  tail) = do
+  ts) = do
     compileTeXGroup paragraphs
-    compileTeXemes tail
+    compileTeXemes ts
 compileTeXemes (
   (TeXComment _) :
-  tail) = do
-    compileTeXemes tail
-
-addParagraphSpace :: TeX ()
-addParagraphSpace = do
-  length <- getParagraphLength
-  if length > 0
-  then addToParagraph " "
-  else return ()
-
-tryAddParagraphSpace :: TeX ()
-tryAddParagraphSpace = do
-  context <- getContext
-  if contextSuppressSpace context
-  then return ()
-  else addParagraphSpace
+  ts) = do
+    compileTeXemes ts
+compileTeXemes _ = fail "noob"
 
 compileTeXGroup :: [Paragraph] -> TeX ()
 compileTeXGroup paragraphs = do
-  mapM (\(TeXemes texemes) -> compileTeXemesAux texemes) paragraphs
+  mapM_ (\(TeXemes texemes) -> compileTeXemesAux texemes) paragraphs
 
   context <- getContext
-  mapM closeGroupAux (groupStack context)
-  context <- getContext
-  setContext context {
+  mapM_ closeGroupAux (groupStack context)
+  context2 <- getContext
+  setContext context2 {
     groupStack = []
   }
 
@@ -453,8 +425,8 @@ compileTeXemesAux texemes = do
 
   compileTeXemes texemes
 
-  context <- getContext
-  setContext context {
+  context2 <- getContext
+  setContext context2 {
     contextTeXemes = oldTeXemes
   }
 
@@ -469,7 +441,7 @@ addManyToOutput :: [String] -> TeX ()
 addManyToOutput strings = do
   context <- getContext
   setContext context {
-    output = List.foldl' (\acc i -> i : acc) (output context) strings
+    output = foldl' (\acc i -> i : acc) (output context) strings
   }
 
 liftOutput :: ([String] -> [String]) -> TeX ()
@@ -479,14 +451,12 @@ liftOutput function = do
     output = function (output context)
   }
 
-getParagraphLength :: TeX Int
-getParagraphLength = do
-  context <- getContext
-  return $ paragraphLength context
-
 closeGroupAux :: String -> TeX ()
 closeGroupAux name = do
   addToParagraph $ showString "</" $ showString name ">"
+
+fixStack :: Int -> [Int] -> [Int]
+fixStack 0 stack = stack
 
 advanceHeader :: Int -> TeX ()
 advanceHeader depth = do
@@ -499,8 +469,8 @@ advanceHeader depth = do
   else
     case (headerStack context) of
       [] -> fail "header stack underflow"
-      (currentNumber:tail) -> setContext context {
-        headerStack = (currentNumber + 1) : tail
+      (currentNumber : numbers) -> setContext context {
+        headerStack = (currentNumber + 1) : numbers
       }
 
 writeSectionAnchor :: TeX ()
@@ -549,8 +519,4 @@ writeBegin environment = do
     Definition -> writeDefinitionAnchor
     _ -> return ()
   addToOutput $ htmlBegin environment
-
-writeEnd :: Environment -> TeX ()
-writeEnd environment = do
-  addToOutput $ htmlEnd environment
 
